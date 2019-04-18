@@ -10,21 +10,26 @@ import java.util.Map;
  */
 public class Environment implements EnvironmentInt {
 
-	private Map<String, Double> table;
+    private String name;
+    private Map<String, Double> table;
 
-	public Environment() {
-		this.table = new HashMap<String, Double>();
-	}
+    public Environment(String name) {
+        this.name = name;
+        this.table = new HashMap<String, Double>();
+    }
 
-	@Override
-	public void putVariable(String variable, Double value) {
-		table.put(variable, value);
-	}
+    public Environment() {
+        this("default");
+    }
 
-	@Override
-	public Double getVariableValue(String variable) {
-		return table.get(variable);
-	}
+    @Override
+    public void putVariable(String variable, Double value) {
+        table.put(variable, value);
+    }
 
+    @Override
+    public Double getVariableValue(String variable) {
+        return table.get(variable);
+    }
 
 }
