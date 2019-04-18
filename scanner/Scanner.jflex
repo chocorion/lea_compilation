@@ -18,7 +18,7 @@ import beaver.Scanner;
 
 Comm = \/\/~\n
 Identifier = [a-zA-Z_][a-zA-Z0-9_]*
-String = \"~\"
+String = \"[^\"]{0,64}\"
 Integer = [0-9]+
 Intager_hexa = 0x[0-9A-Fa-f]{0, 5}
 //Decimal = ({Integer}(\.{Integer})?)|(\.{Integer})
