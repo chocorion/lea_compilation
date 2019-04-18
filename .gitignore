@@ -1,0 +1,12 @@
+/nbproject/private/
+/dist/
+/build/
+nbproject/
+
+nbbuild\.xml
+
+lib/CopyLibs/
+
+lib/nblibraries\.properties
+
+manifest\.mf
