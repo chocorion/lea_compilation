@@ -23,4 +23,17 @@ public class StackEnvironment extends Environment {
         this("default");
     }
 
+    @Override
+    public void putVariable(String variable, Double value) {
+        stack.push(value);
+    }
+
+    public Double getValueAt(int index) throws IndexOutOfBoundsException {
+        // Allows to get a value in the stack (without popping, at a distance
+        // relative to the head)
+        int target = stack.size()-index-1;
+        if(target <0) throw new IndexOutOfBoundsException("Reached end of stack");
+        return stack.get(target);
+    }
+
 }
