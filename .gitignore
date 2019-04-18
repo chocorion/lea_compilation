@@ -10,4 +10,5 @@ lib/CopyLibs/
 lib/nblibraries\.properties
 
 manifest\.mf
-src/ubordeaux/deptinfo/compilation/project/main/ScannerExpr.java
+src/ubordeaux/deptinfo/compilation/project/main/ScannerExpr\.java
+

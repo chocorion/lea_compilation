@@ -20,7 +20,7 @@ Comm = \/\/~\n
 Identifier = [a-zA-Z_][a-zA-Z0-9_]*
 String = \"~\"
 Integer = [0-9]+
-Intager_hexa = 0x[0-9A-Fa-f]+
+Intager_hexa = 0x[0-9A-Fa-f]{0, 5}
 //Decimal = ({Integer}(\.{Integer})?)|(\.{Integer})
 //Float = [+-]?{Decimal}([eE][+-]?{Integer})?
 
