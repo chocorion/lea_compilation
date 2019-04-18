@@ -1,4 +1,4 @@
-package abstractTree;
+package ubordeaux.deptinfo.compilation.project.environment;
 
 /**
  * Defines the methods needed to interact with an emulated environment with variables

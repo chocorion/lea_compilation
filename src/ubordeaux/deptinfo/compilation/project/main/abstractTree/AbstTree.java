@@ -1,5 +1,6 @@
-package abstractTree;
+package ubordeaux.deptinfo.compilation.project.main.abstractTree;
 import beaver.Symbol;
+import ubordeaux.deptinfo.compilation.project.environment.EnvironmentInt;
 
 /**
  * Implementation of an abstract tree capable of evaluating itself

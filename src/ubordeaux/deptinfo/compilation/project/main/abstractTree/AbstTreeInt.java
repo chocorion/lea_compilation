@@ -1,5 +1,5 @@
-package abstractTree;
-
+package ubordeaux.deptinfo.compilation.project.main.abstractTree;
+import ubordeaux.deptinfo.compilation.project.environment.EnvironmentInt;
 /**
  * Defines the methods needed to interact with an abstract tree that can be
  * evaluated in an environment
