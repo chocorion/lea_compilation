@@ -20,6 +20,7 @@ Comm = \/\/~\n
 Identifier = [a-zA-Z_][a-zA-Z0-9_]*
 String = \"~\"
 Integer = [0-9]+
+Intager_hexa = 0x[0-9A-Fa-f]+
 //Decimal = ({Integer}(\.{Integer})?)|(\.{Integer})
 //Float = [+-]?{Decimal}([eE][+-]?{Integer})?
 
@@ -83,12 +84,12 @@ Integer = [0-9]+
 "!=" 	        { System.out.println("NE     	-> " + yytext()); return new Symbol(Terminals.TOKEN_NE 		, yyline, yycolumn); }
 
 //Token LITERALS
-{Integer} 	        { System.out.println("LIT_INTEGER   -> " + yytext()); return new Symbol(Terminals.TOKEN_LIT_INTEGER , yyline, yycolumn); }
-{String} 	        { System.out.println("LIT_STRING    -> " + yytext()); return new Symbol(Terminals.TOKEN_LIT_STRING 	, yyline, yycolumn); }
-"true" 	        	{ System.out.println("TRUE     		-> " + yytext()); return new Symbol(Terminals.TOKEN_TRUE 		, yyline, yycolumn); }
-"false" 	        { System.out.println("FALSE     	-> " + yytext()); return new Symbol(Terminals.TOKEN_FALSE 		, yyline, yycolumn); }
-"NULL" 	        	{ System.out.println("NULL     		-> " + yytext()); return new Symbol(Terminals.TOKEN_NULL 		, yyline, yycolumn); }
-{Identifier} 	    { System.out.println("IDENTIFIER    -> " + yytext()); return new Symbol(Terminals.TOKEN_IDENTIFIER 	, yyline, yycolumn); }
+{Integer} | {Intager_hexa} { System.out.println("LIT_INTEGER   	-> " + yytext()); return new Symbol(Terminals.TOKEN_LIT_INTEGER , yyline, yycolumn); }
+{String} 	        	   { System.out.println("LIT_STRING    	-> " + yytext()); return new Symbol(Terminals.TOKEN_LIT_STRING 	, yyline, yycolumn); }
+"true" 	        		   { System.out.println("TRUE     		-> " + yytext()); return new Symbol(Terminals.TOKEN_TRUE 		, yyline, yycolumn); }
+"false" 	        	   { System.out.println("FALSE     		-> " + yytext()); return new Symbol(Terminals.TOKEN_FALSE 		, yyline, yycolumn); }
+"NULL" 	        		   { System.out.println("NULL     		-> " + yytext()); return new Symbol(Terminals.TOKEN_NULL 		, yyline, yycolumn); }
+{Identifier} 	    	   { System.out.println("IDENTIFIER    	-> " + yytext()); return new Symbol(Terminals.TOKEN_IDENTIFIER 	, yyline, yycolumn); }
 
 
 [^]|\n		{ }
