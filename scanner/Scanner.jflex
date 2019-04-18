@@ -83,12 +83,12 @@ Integer = [0-9]+
 "!=" 	        { System.out.println("NE     -> " + yytext()); return new Symbol(Terminals.TOKEN_NE 	, yyline, yycolumn); }
 
 //Token LITERALS
-{Identifier} 	        { System.out.println("IDENTIFIER     -> " + yytext()); return new Symbol(Terminals.TOKEN_IDENTIFIER 	, yyline, yycolumn); }
 {Integer} 	        { System.out.println("LIT_INTEGER     -> " + yytext()); return new Symbol(Terminals.TOKEN_LIT_INTEGER 	, yyline, yycolumn); }
 {String} 	        { System.out.println("LIT_STRING     -> " + yytext()); return new Symbol(Terminals.TOKEN_LIT_STRING 	, yyline, yycolumn); }
 "true" 	        { System.out.println("TRUE     -> " + yytext()); return new Symbol(Terminals.TOKEN_TRUE 	, yyline, yycolumn); }
 "false" 	        { System.out.println("FALSE     -> " + yytext()); return new Symbol(Terminals.TOKEN_FALSE 	, yyline, yycolumn); }
 "NULL" 	        { System.out.println("NULL     -> " + yytext()); return new Symbol(Terminals.TOKEN_NULL 	, yyline, yycolumn); }
+{Identifier} 	        { System.out.println("IDENTIFIER     -> " + yytext()); return new Symbol(Terminals.TOKEN_IDENTIFIER 	, yyline, yycolumn); }
 
 
 [^]|\n		{ }
