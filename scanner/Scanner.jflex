@@ -30,8 +30,8 @@ Intager_hexa = 0x[0-9A-Fa-f]+
 //Token KEYWORDS
 "type" 	        { System.out.println("TYPE  	-> " + yytext()); return new Symbol(Terminals.TOKEN_TYPE		, yyline, yycolumn); }
 "string" 	    { System.out.println("STRING  	-> " + yytext()); return new Symbol(Terminals.TOKEN_STRING		, yyline, yycolumn); }
-"int" 	        { System.out.println("INTEGER  	-> " + yytext()); return new Symbol(Terminals.TOKEN_INTEGER		, yyline, yycolumn); }
-"bool" 	        { System.out.println("BOOLEAN  	-> " + yytext()); return new Symbol(Terminals.TOKEN_BOOLEAN		, yyline, yycolumn); }
+"integer"		{ System.out.println("INTEGER  	-> " + yytext()); return new Symbol(Terminals.TOKEN_INTEGER		, yyline, yycolumn); }
+"boolean"		{ System.out.println("BOOLEAN  	-> " + yytext()); return new Symbol(Terminals.TOKEN_BOOLEAN		, yyline, yycolumn); }
 "array" 	    { System.out.println("ARRAY  	-> " + yytext()); return new Symbol(Terminals.TOKEN_ARRAY		, yyline, yycolumn); }
 "of"	 	    { System.out.println("OF  		-> " + yytext()); return new Symbol(Terminals.TOKEN_OF			, yyline, yycolumn); }
 "struct"	 	{ System.out.println("STRUCT  	-> " + yytext()); return new Symbol(Terminals.TOKEN_STRUCT		, yyline, yycolumn); }
@@ -88,7 +88,7 @@ Intager_hexa = 0x[0-9A-Fa-f]+
 {String} 	        	   { System.out.println("LIT_STRING    	-> " + yytext()); return new Symbol(Terminals.TOKEN_LIT_STRING 	, yyline, yycolumn); }
 "true" 	        		   { System.out.println("TRUE     		-> " + yytext()); return new Symbol(Terminals.TOKEN_TRUE 		, yyline, yycolumn); }
 "false" 	        	   { System.out.println("FALSE     		-> " + yytext()); return new Symbol(Terminals.TOKEN_FALSE 		, yyline, yycolumn); }
-"NULL" 	        		   { System.out.println("NULL     		-> " + yytext()); return new Symbol(Terminals.TOKEN_NULL 		, yyline, yycolumn); }
+"null" 	        		   { System.out.println("NULL     		-> " + yytext()); return new Symbol(Terminals.TOKEN_NULL 		, yyline, yycolumn); }
 {Identifier} 	    	   { System.out.println("IDENTIFIER    	-> " + yytext()); return new Symbol(Terminals.TOKEN_IDENTIFIER 	, yyline, yycolumn); }
 
 
