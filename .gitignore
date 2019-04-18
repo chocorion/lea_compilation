@@ -14,3 +14,7 @@ src/ubordeaux/deptinfo/compilation/project/main/ScannerExpr\.java
 
 
 src/ubordeaux/deptinfo/compilation/project/main/ParserExpr\.java
+
+bin/
+
+data/output
