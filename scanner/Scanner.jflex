@@ -1,3 +1,5 @@
+package ubordeaux.deptinfo.compilation.project.main;
+
 import beaver.Symbol;
 import beaver.Scanner;
 
