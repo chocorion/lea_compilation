@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////
 
 %package "ubordeaux.deptinfo.compilation.project.main";
-%class "Parser";
+%class "ParserExpr";
 %import "ubordeaux.deptinfo.compilation.project.node.*";
 %import "ubordeaux.deptinfo.compilation.project.type.*";
 %import "ubordeaux.deptinfo.compilation.project.environment.*";
