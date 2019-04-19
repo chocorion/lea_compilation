@@ -352,7 +352,7 @@ case_default=
 	;
 		
 variable_access=
-	TOKEN_IDENTIFIER
+	TOKEN_IDENTIFIER {: return new NodeId((String)e.value), typeEnvironment.getVariableValue((String)e.value)); :}
 	| variable_access TOKEN_LBRACKET expression TOKEN_RBRACKET 
 	| expression TOKEN_CIRC 	
 	;
