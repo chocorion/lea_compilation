@@ -5,8 +5,10 @@
 %import "ubordeaux.deptinfo.compilation.project.environment.*";
 %import "java.util.ArrayList";
 %import "java.util.Iterator";
+%import "java.util.*";
 
 %embed {: 
+
 	static class Events extends beaver.Parser.Events {
 		public void syntaxError(Symbol token) {
 			System.err.format("*** Erreur de syntaxe en ligne %d, colonne %d. Token inattendu: %s\n",
@@ -375,9 +377,13 @@ expression=
 	;
 	
 literal=
-	TOKEN_LIT_INTEGER
-	| TOKEN_LIT_STRING
-	| TOKEN_TRUE
-	| TOKEN_FALSE
-	| TOKEN_NULL
+	TOKEN_LIT_INTEGER.e {:
+		//Faire ici une verification sur la valeur !
+
+		return new NodeLiteral(new TypeInt((Integer)e.value), e);
+	:}
+	| TOKEN_LIT_STRING.e {: return new NodeLiteral(new TypeString(), e); :}
+	| TOKEN_TRUE  {: return new NodeLiteral(new TypeBoolean(), true); :}
+	| TOKEN_FALSE {: return new NodeLiteral(new TypeBoolean(), false); :}
+	| TOKEN_NULL  {: return new NodeLiteral(new TypePointer(), null); :}
 	;
