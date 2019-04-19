@@ -1,0 +1,2 @@
+#/bin/sh
+ant clean && ant all && cat data/output
