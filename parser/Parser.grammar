@@ -70,7 +70,8 @@
 %left TOKEN_TIMES, TOKEN_DIV;
 %left TOKEN_PLUS, TOKEN_MINUS;
 
-%typeof literal="Node";
+%typeof literal="NodeLiteral";
+%typeof expression="NodeExp";
 
 %goal program;
 
@@ -374,14 +375,13 @@ expression=
 	| expression TOKEN_NE expression
 	| TOKEN_LPAR expression TOKEN_RPAR
 	| procedure_expression
-	| variable_access
-	| literal
+	| variable_access.e {: return e; :}
+	| literal.e {: return e; :}
 	;
 	
 literal=
 	TOKEN_LIT_INTEGER.e {:
-		//Faire ici une verification sur la valeur !
-		System.out.println("In grammar : " + (Integer)(e.value));
+	//TODO: Verifier la valeur et generer une erreur si elle est trop grande
 		return new NodeLiteral(new TypeInt((Integer)e.value), e.value);
 	:}
 	| TOKEN_LIT_STRING.e {: return new NodeLiteral(new TypeString(), (String)e.value); :}
