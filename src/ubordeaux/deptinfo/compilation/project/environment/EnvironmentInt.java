@@ -6,7 +6,7 @@ package ubordeaux.deptinfo.compilation.project.environment;
  * @author Lionel CLÉMENT
  */
 public interface EnvironmentInt {
-	
-	void putVariable(String var, Double value);
-	Double getVariableValue(String variable);
+
+	void putVariable(String var, String value);
+	String getVariableValue(String variable);
 }

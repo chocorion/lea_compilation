@@ -11,11 +11,11 @@ import java.util.Map;
 public class Environment implements EnvironmentInt {
 
     private String name;
-    private Map<String, Double> table;
+    private Map<String, String> table;
 
     public Environment(String name) {
         this.name = name;
-        this.table = new HashMap<String, Double>();
+        this.table = new HashMap<>();
     }
 
     public Environment() {
@@ -23,12 +23,12 @@ public class Environment implements EnvironmentInt {
     }
 
     @Override
-    public void putVariable(String variable, Double value) {
+    public void putVariable(String variable, String value) {
         table.put(variable, value);
     }
 
     @Override
-    public Double getVariableValue(String variable) {
+    public String getVariableValue(String variable) {
         return table.get(variable);
     }
 

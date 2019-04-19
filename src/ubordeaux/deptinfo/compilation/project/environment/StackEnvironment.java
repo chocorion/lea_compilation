@@ -24,6 +24,9 @@ public class StackEnvironment extends Environment {
     }
 
     @Override
+    public void putVariable(String variable, String value) {
+    }
+
     public void putVariable(String variable, Double value) {
         stack.push(value);
     }

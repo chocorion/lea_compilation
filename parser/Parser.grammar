@@ -85,6 +85,8 @@
 %typeof type_declaration_list="NodeList";
 %typeof if_statement="NodeIf";
 %typeof dispose_statement="NodeDispose";
+%typeof return_statement="NodeReturn";
+%typeof statement="Node";
 
 %goal program;
 
@@ -388,10 +390,10 @@ switch_statement=
 
 case_statement_list=
 	case_statement_list.l case_statement.e case_default.d {:
-
+		// The NodeCase's statement has to terminate the switch for this
+		// implementation to work
 		for(int x = 0; x < e.size(); x++) {
-			NodeCase c = e.get(x);
-			l.add(e);
+			l.add(e.get(x));
 		}
 		l.add(d);
 		return l;
@@ -406,8 +408,8 @@ case_statement=
 	{:
 		NodeCaseList l = new NodeCaseList();
 		for(int x = 0; x < i.size(); x++) {
-			NodeId n = i.get(x);
-			l.add(new NodeCase(n,s));
+			NodeId n = (NodeId) i.get(x);
+			l.add(new NodeCase(n.toString(),s));
 		}
 		return l;
 	:}
@@ -422,7 +424,17 @@ case_default=
 
 variable_access=
 	TOKEN_IDENTIFIER.e {:
-		return new NodeId((String)e.value, typeEnvironment.getVariableValue((String)e.value));
+		String typename = typeEnvironment.getVariableValue((String)e.value);
+		switch(typename) {
+			case "int":
+				return new NodeId((String)e.value, new TypeInt());
+			case "string":
+				return new NodeId((String)e.value, new TypeString());
+			case "boolean":
+				return new NodeId((String)e.value, new TypeBoolean());
+			default:
+				return new NodeId((String)e.value, new TypeNamed(typename));
+		}
 	:}
 	| variable_access.t TOKEN_LBRACKET expression.e TOKEN_RBRACKET
 	{:
@@ -430,7 +442,7 @@ variable_access=
 	:}
 	| expression.e TOKEN_CIRC
 	{:
-		return new NodePtrAccess(NodeExp(e));
+		return new NodePtrAccess(e);
 	:}
 	;
 
@@ -445,7 +457,7 @@ expression=
 	| expression.e1 TOKEN_OR expression.e2 {: return new NodeRel("OR", e1, e2); :}
 	| expression.e1 TOKEN_AND expression.e2 {: return new NodeRel("AND", e1, e2); :}
 	| TOKEN_NOT expression.e {:
-		return new NodeRel("NOT", e);
+		return new NodeRel("EQ", e,new NodeLiteral(new TypeBoolean(), false));
 	:}
 	| expression.e1 TOKEN_LT expression.e2 {: return new NodeRel("LT", e1, e2); :}
 	| expression.e1 TOKEN_LE expression.e2 {: return new NodeRel("LE", e1, e2); :}
@@ -474,6 +486,6 @@ literal=
 	:}
 	| TOKEN_LIT_STRING.e {: return new NodeLiteral(new TypeString(), (String)e.value); :}
 	| TOKEN_TRUE  {: return new NodeLiteral(new TypeBoolean(), true); :}
-	| TOKEN_FALSE {: return new NodeLiteral(new TypeBoolean(), false); :}
+	| TOKEN_FALSE {: return new NodeLiteral(new TypeBoolean(), false);:}
 	| TOKEN_NULL  {: return new NodeLiteral(new TypePointer(), null); :}
 	;
