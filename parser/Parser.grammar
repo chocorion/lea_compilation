@@ -56,6 +56,16 @@
 * A completer
 ***/
 
+//D'apres ce que j'ai lu, faut mettre tous les operateurs en left,
+//Sauf les operateurs if/then/else.
+//Il semble qu'il faille bidouiller les if/then/else, la grammaire n'est pas tout a fait correcte
+
+%right TOKEN_IF, TOKEN_THEN, TOKEN_ELSE;
+%right TOKEN_CIRC;
+
+%left TOKEN_TIMES, TOKEN_DIV;
+%left TOKEN_PLUS, TOKEN_MINUS;
+
 %goal program;
 
 /***

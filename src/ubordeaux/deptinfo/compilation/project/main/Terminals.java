@@ -6,8 +6,8 @@ package ubordeaux.deptinfo.compilation.project.main;
  */
 public class Terminals {
 	static public final short EOF = 0;
-	static public final short TOKEN_MINUS = 1;
-	static public final short TOKEN_IDENTIFIER = 2;
+	static public final short TOKEN_IDENTIFIER = 1;
+	static public final short TOKEN_MINUS = 2;
 	static public final short TOKEN_LPAR = 3;
 	static public final short TOKEN_LIT_INTEGER = 4;
 	static public final short TOKEN_NOT = 5;
@@ -16,9 +16,9 @@ public class Terminals {
 	static public final short TOKEN_FALSE = 8;
 	static public final short TOKEN_NULL = 9;
 	static public final short TOKEN_CIRC = 10;
-	static public final short TOKEN_PLUS = 11;
-	static public final short TOKEN_TIMES = 12;
-	static public final short TOKEN_DIV = 13;
+	static public final short TOKEN_TIMES = 11;
+	static public final short TOKEN_DIV = 12;
+	static public final short TOKEN_PLUS = 13;
 	static public final short TOKEN_OR = 14;
 	static public final short TOKEN_AND = 15;
 	static public final short TOKEN_LT = 16;
@@ -65,8 +65,8 @@ public class Terminals {
 
 	static public final String[] NAMES = {
 		"EOF",
-		"TOKEN_MINUS",
 		"TOKEN_IDENTIFIER",
+		"TOKEN_MINUS",
 		"TOKEN_LPAR",
 		"TOKEN_LIT_INTEGER",
 		"TOKEN_NOT",
@@ -75,9 +75,9 @@ public class Terminals {
 		"TOKEN_FALSE",
 		"TOKEN_NULL",
 		"TOKEN_CIRC",
-		"TOKEN_PLUS",
 		"TOKEN_TIMES",
 		"TOKEN_DIV",
+		"TOKEN_PLUS",
 		"TOKEN_OR",
 		"TOKEN_AND",
 		"TOKEN_LT",
