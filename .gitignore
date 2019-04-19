@@ -18,3 +18,5 @@ src/ubordeaux/deptinfo/compilation/project/main/ParserExpr\.java
 bin/
 
 data/output
+exec.sh
+src/ubordeaux/deptinfo/compilation/project/main/Terminals.java
