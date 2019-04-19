@@ -65,10 +65,12 @@
 %right TOKEN_IF, TOKEN_THEN, TOKEN_ELSE;
 %right TOKEN_CIRC;
 
-%left TOKEN_LT, TOKEN_LE, TOKEN_GT, TOKEN_GE, TOKEN_EQ, TOKEN_NE;
 %left TOKEN_AND, TOKEN_OR, TOKEN_NOT;
+%left TOKEN_LT, TOKEN_LE, TOKEN_GT, TOKEN_GE, TOKEN_EQ, TOKEN_NE;
 %left TOKEN_TIMES, TOKEN_DIV;
 %left TOKEN_PLUS, TOKEN_MINUS;
+
+%typeof literal="Node";
 
 %goal program;
 
@@ -379,10 +381,10 @@ expression=
 literal=
 	TOKEN_LIT_INTEGER.e {:
 		//Faire ici une verification sur la valeur !
-
-		return new NodeLiteral(new TypeInt((Integer)e.value), e);
+		System.out.println("In grammar : " + (Integer)(e.value));
+		return new NodeLiteral(new TypeInt((Integer)e.value), e.value);
 	:}
-	| TOKEN_LIT_STRING.e {: return new NodeLiteral(new TypeString(), e); :}
+	| TOKEN_LIT_STRING.e {: return new NodeLiteral(new TypeString(), (String)e.value); :}
 	| TOKEN_TRUE  {: return new NodeLiteral(new TypeBoolean(), true); :}
 	| TOKEN_FALSE {: return new NodeLiteral(new TypeBoolean(), false); :}
 	| TOKEN_NULL  {: return new NodeLiteral(new TypePointer(), null); :}

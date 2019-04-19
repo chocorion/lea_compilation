@@ -22,7 +22,7 @@ Comm = \/\/~\n
 Identifier = [a-zA-Z_][a-zA-Z0-9_]*
 String = \"[^\"]{0,64}\"
 Integer = [0-9]+
-Intager_hexa = 0x[0-9A-Fa-f]
+Intager_hexa = 0x[0-9A-Fa-f]+
 //Decimal = ({Integer}(\.{Integer})?)|(\.{Integer})
 //Float = [+-]?{Decimal}([eE][+-]?{Integer})?
 
@@ -86,8 +86,10 @@ Intager_hexa = 0x[0-9A-Fa-f]
 "!=" 	        { System.out.print("[NE "	 + yytext() + "] "); return new Symbol(Terminals.TOKEN_NE 		, yyline, yycolumn); }
 
 //Token LITERALS
-{Integer}				   { System.out.print("[LIT_INTEGER	" + yytext() + "] "); return new Symbol(Terminals.TOKEN_LIT_INTEGER , yyline, yycolumn, Integer.parseInt(yytext())); }
-{Intager_hexa} 			   { System.out.print("[LIT_INTEGER	" + yytext() + "] "); return new Symbol(Terminals.TOKEN_LIT_INTEGER , yyline, yycolumn, Integer.parseInt(yytext(), 16)); }
+{Integer}				   { 
+	System.out.println("\n" + Integer.parseInt(yytext()));
+	System.out.print("[LIT_INTEGER	" + yytext() + "] "); return new Symbol(Terminals.TOKEN_LIT_INTEGER , yyline, yycolumn, (Integer)Integer.parseInt(yytext())); }
+{Intager_hexa} 			   { System.out.print("[LIT_INTEGER	" + yytext() + "] "); return new Symbol(Terminals.TOKEN_LIT_INTEGER , yyline, yycolumn, (Integer)Integer.parseInt((yytext().split("0x"))[1], 16)); }
 {String} 	        	   { System.out.print("[LIT_STRING	" + yytext() + "] "); return new Symbol(Terminals.TOKEN_LIT_STRING 	, yyline, yycolumn, yytext()); }
 "true" 	        		   { System.out.print("[TRUE] "); 	return new Symbol(Terminals.TOKEN_TRUE 		, yyline, yycolumn); }
 "false" 	        	   { System.out.print("[FALSE] "); 	return new Symbol(Terminals.TOKEN_FALSE 	, yyline, yycolumn); }
