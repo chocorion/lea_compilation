@@ -72,11 +72,19 @@
 %left TOKEN_TIMES, TOKEN_DIV;
 %left TOKEN_PLUS, TOKEN_MINUS;
 
+%typeof program="Node";
+%typeof type_declaration_part="NodeList";
 %typeof literal="NodeLiteral";
 %typeof expression="NodeExp";
 %typeof case_default="NodeCase";
-%typeof case_statement_list="NodeCaseList";
+%typeof case_statement = "NodeCaseList";
+%typeof case_statement_list = "NodeCaseList";
 %typeof variable_access = "NodeExp";
+%typeof identifier_list = "NodeList";
+%typeof expression_list = "NodeList";
+%typeof type_declaration_list="NodeList";
+%typeof if_statement="NodeIf";
+%typeof dispose_statement="NodeDispose";
 
 %goal program;
 
@@ -105,22 +113,39 @@
 
 
 program=
-	type_declaration_part
-	variable_declaration_part
-	procedure_definition_part
+	type_declaration_part.p1
+	variable_declaration_part.p2
+	procedure_definition_part.p3
 	TOKEN_BEGIN
-	statement_list
-	TOKEN_END
+	statement_list.p4
+	TOKEN_END {:
+		NodeList p = new NodeList();
+		p.add(p1);
+		p.add(p2);
+		p.add(p3);
+		p.add(p4);
+
+		return p;
+	:}
 	;
 
 type_declaration_part=
 	/* empty */
-	| TOKEN_TYPE type_declaration_list
+	| TOKEN_TYPE type_declaration_list.e {:
+		return e;
+	:}
 	;
 
 type_declaration_list=
-	type_declaration_list type_declaration
-	| type_declaration
+	type_declaration_list.l type_declaration.e {:
+		l.add(e);
+		return l;
+	:}
+	| type_declaration.e {:
+		NodeList l = new NodeList();
+		l.add(e);
+		return l;
+	:}
 	;
 
 type_declaration=
@@ -299,8 +324,16 @@ expression_part=
 	;
 
 expression_list=
-	expression_list TOKEN_COMMA expression
-	| expression
+	expression_list.l TOKEN_COMMA expression.e {:
+		l.add(e);
+		return l;
+	:}
+	| expression.e {:
+		NodeList l = new NodeList();
+		l.add(e);
+
+		return l;
+	:}
 	;
 
 new_statement=
@@ -308,7 +341,9 @@ new_statement=
 	;
 
 dispose_statement=
-	TOKEN_DISPOSE variable_access TOKEN_SEMIC
+	TOKEN_DISPOSE variable_access.e TOKEN_SEMIC {:
+		return new NodeDispose(e);
+	:}
 	;
 
 println_statement=
@@ -320,7 +355,9 @@ readln_statement=
 	;
 
 return_statement=
-	TOKEN_RETURN expression TOKEN_SEMIC
+	TOKEN_RETURN expression.e TOKEN_SEMIC {:
+		return new NodeReturn(e);
+	:}
 	;
 
 structured_statement=
@@ -331,12 +368,18 @@ structured_statement=
 	;
 
 if_statement=
-	TOKEN_IF expression TOKEN_THEN statement
-	| TOKEN_IF expression TOKEN_THEN statement TOKEN_ELSE statement
+	TOKEN_IF expression.e TOKEN_THEN statement.s {:
+		return new NodeIf(e, s);
+	:}
+	| TOKEN_IF expression.e TOKEN_THEN statement.s1 TOKEN_ELSE statement.s2 {:
+		return new NodeIf(e, s1, s2);
+	:}
 	;
 
 while_statement=
-	TOKEN_WHILE expression TOKEN_DO statement
+	TOKEN_WHILE expression.e TOKEN_DO statement.t {:
+		return new NodeWhile(e, t);
+	:}
 	;
 
 switch_statement=
@@ -345,20 +388,29 @@ switch_statement=
 
 case_statement_list=
 	case_statement_list.l case_statement.e case_default.d {:
-		l.add(e);
+
+		for(int x = 0; x < e.size(); x++) {
+			NodeCase c = e.get(x);
+			l.add(e);
+		}
 		l.add(d);
 		return l;
 	:}
 	| case_statement.e {:
-		NodeCaseList caseList = new NodeCaseList();
-		caseList.add(e);
-
-		return caseList;
+		return e;
 	:}
 	;
 
 case_statement=
-	TOKEN_CASE identifier_list TOKEN_COLON statement
+	TOKEN_CASE identifier_list.i TOKEN_COLON statement.s
+	{:
+		NodeCaseList l = new NodeCaseList();
+		for(int x = 0; x < i.size(); x++) {
+			NodeId n = i.get(x);
+			l.add(new NodeCase(n,s));
+		}
+		return l;
+	:}
 	;
 
 case_default=
@@ -404,8 +456,13 @@ expression=
 		return new NodeRel("EQ", e1, e2);
 	:}
 	| expression.e1 TOKEN_NE expression.e2 {: return new NodeRel("NE",e1,e2); :}
-	| TOKEN_LPAR expression TOKEN_RPAR
-	| procedure_expression
+	| TOKEN_LPAR expression.e TOKEN_RPAR {:
+		return e;
+	:}
+	| procedure_expression.e {:
+		//Pas sur...
+		return e;
+	:}
 	| variable_access.e {: return e; :}
 	| literal.e {: return e; :}
 	;
