@@ -123,6 +123,8 @@
 %typeof array_type = "TypeArray";
 %typeof subrange_type = "Type";
 %typeof range_type="Type";
+%typeof index_type="Type";
+%typeof type_declaration = "NodeId";
 
 %goal program;
 
@@ -176,7 +178,7 @@ type_declaration_part=
 
 type_declaration_list=
 	type_declaration_list.l type_declaration.e {:
-		l.add(e);
+			l.add(e);
 		return l;
 	:}
 	| type_declaration.e {:
@@ -187,14 +189,11 @@ type_declaration_list=
 	;
 
 type_declaration=
-	type_declaration_head TOKEN_AFF type TOKEN_SEMIC
+	TOKEN_IDENTIFIER.i TOKEN_AFF type.t TOKEN_SEMIC
 	{:
-
+		//verification type
+		return new NodeId((String)i.value, t);
 	:}
-	;
-
-type_declaration_head=
-	TOKEN_IDENTIFIER
 	;
 
 type=
@@ -225,8 +224,8 @@ named_type=
 	;
 
 index_type =
-	enumerated_type
-	| subrange_type
+	enumerated_type.e {:return e; :}
+	| subrange_type.e {:return e; :}
 	;
 
 enumerated_type=
@@ -240,7 +239,7 @@ enumerated_type=
 			new TypeItemEnum(cpt, it.next())
 		);
 		cpt++;
-		String last;
+		String last = "";
 
 		while(it.hasNext()) {
 			last = it.next();
@@ -321,13 +320,10 @@ variable_declaration_part=
 variable_declaration_list=
 	variable_declaration_list.l variable_declaration.e {:
 		l.add(e);
-
 		return l;
 	:}
 	| variable_declaration.e {:
-		NodeList l = new NodeList();
-		l.add(e);
-
+		NodeList l = new NodeList(e);
 		return l;
 	:}
 	;
@@ -461,6 +457,8 @@ block=
 		NodeList l = new NodeList();
 		l.add(e1);
 		l.add(e2);
+
+		return l;
 	:}
 	;
 
