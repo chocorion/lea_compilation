@@ -92,6 +92,16 @@
 %typeof println_statement="NodeExp";
 %typeof readln_statement="NodeExp";
 %typeof new_statement="NodeNew";
+%typeof expression_part="NodeList";
+%typeof simple_statement="Node"; //Maybe
+%typeof assignment_statement="NodeAssign";
+%typeof procedure_expression="NodeCallFct";
+%typeof procedure_statement="NodeCallFct";
+%typeof statement="Node"; //Pas d'idee pour le moment
+%typeof statement_list="NodeList";
+%typeof argt="NodeIf";
+%typeof argt_list="NodeList";
+%typeof argt_part="NodeList";
 
 %goal program;
 
@@ -274,60 +284,120 @@ procedure_head=
 
 argt_part=
 	/* empty */
-	| argt_list
+	| argt_list.e {:
+		return e;
+	:}
 	;
 
 argt_list=
-	argt_list TOKEN_COMMA argt
-	| argt
+	argt_list.l TOKEN_COMMA argt.e {:
+		l.add(e);
+
+		return l;
+	:}
+	| argt.e {:
+		NodeList l = new NodeList();
+		l.add(e);
+
+		return l;
+	:}
 	;
 
 argt=
-	TOKEN_IDENTIFIER TOKEN_COLON type
+	TOKEN_IDENTIFIER.name TOKEN_COLON type.t
+	{:
+		//Mettre à jour l'environment qui nous permet d'enregistrer les types
+		return new NodeId(name.value, t);
+	:}
+
 	;
 
 block=
+{://Aucune idee de ce qu'il faut renvoyer comme type, sachant que Node est abstract et ne peut etre
+  //implemente. Node list ?:}
 	variable_declaration_part
 	TOKEN_BEGIN
-	statement_list
+		statement_list
 	TOKEN_END
 	;
 
 statement_list=
-	statement_list statement
-	| statement
+	statement_list.l statement.e {:
+		l.add(e);
+
+		return l;
+	:}
+	| statement.e {:
+		NodeList l = new NodeList();
+		l.add(e);
+
+		return l;
+	:}
 	;
 
 statement=
-	simple_statement
-	| structured_statement
+	simple_statement.e {:
+		return e;
+	:}
+	| structured_statement.e {:
+		return e;
+	:}
 	;
 
 simple_statement=
-	assignment_statement
-	| procedure_statement
-	| new_statement
-	| dispose_statement
-	| println_statement
-	| readln_statement
-	| return_statement
+	assignment_statement.e {:
+		return e;
+	:}
+	| procedure_statement.e {:
+		return e;
+	:}
+	| new_statement.e {:
+		return e;
+	:}
+	| dispose_statement.e {:
+		return e;
+	:}
+	| println_statement.e {:
+		return e;
+	:}
+	| readln_statement.e {:
+		return e;
+	:}
+	| return_statement.e {:
+		return e;
+	:}
 	;
 
 assignment_statement=
-	variable_access TOKEN_AFF expression TOKEN_SEMIC
+	variable_access.v TOKEN_AFF expression.e TOKEN_SEMIC {:
+		//Affectation d'une valeur dans une variable, penser à faire la vérification du type
+		return new NodeAssign(v, e); //Je ne suis pas sure que ce soit ce type de node à utiliser
+	:}
 	;
 
 procedure_statement=
-	procedure_expression TOKEN_SEMIC
+	procedure_expression.e TOKEN_SEMIC{:	//Je ne sais pas trop a quoi cela correspond
+		return e;
+	:}
 	;
 
 procedure_expression=
-	TOKEN_IDENTIFIER TOKEN_LPAR expression_part TOKEN_RPAR
+	TOKEN_IDENTIFIER.name TOKEN_LPAR expression_part.e TOKEN_RPAR {:
+		//Appel de fonction, je pense qu'il faut renvoyer un node CallFct.
+		//public NodeCallFct(String name, TypeFunct type, NodeList args)
+		String name = name.value;
+		TypeFunct type = null; //TODO
+		//J'imagine qu'on récupère le type en utilisant l'environment.. qui n'est pas encore implémenté
+
+		return new NodeCallFct(name, type, e);
+	:}
 	;
 
 expression_part=
 	/* empty */
-	| expression_list
+	| expression_list.e {:
+		return e;
+	:}
 	;
 
 expression_list=
