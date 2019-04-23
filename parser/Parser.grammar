@@ -123,6 +123,8 @@
 %typeof array_type = "TypeArray";
 %typeof subrange_type = "Type";
 %typeof range_type="Type";
+%typeof index_type="Type";
+%typeof type_declaration = "NodeId";
 
 %goal program;
 
@@ -149,14 +151,20 @@
 *
 ***/
 
+begin_test = TOKEN_BEGIN {:
+	System.out.println("Grammar: Begin !");
+	return new Symbol(0);
+:}
+;
 
 program=
 	type_declaration_part.p1
 	variable_declaration_part.p2
 	procedure_definition_part.p3
-	TOKEN_BEGIN
+	begin_test
 	statement_list.p4
 	TOKEN_END {:
+		System.out.println("Begin program");
 		NodeList p = new NodeList();
 		p.add(p1);
 		p.add(p2);
@@ -176,7 +184,7 @@ type_declaration_part=
 
 type_declaration_list=
 	type_declaration_list.l type_declaration.e {:
-		l.add(e);
+			l.add(e);
 		return l;
 	:}
 	| type_declaration.e {:
@@ -187,14 +195,11 @@ type_declaration_list=
 	;
 
 type_declaration=
-	type_declaration_head TOKEN_AFF type TOKEN_SEMIC
+	TOKEN_IDENTIFIER.i TOKEN_AFF type.t TOKEN_SEMIC
 	{:
-
+		//verification type
+		return new NodeId((String)i.value, t);
 	:}
-	;
-
-type_declaration_head=
-	TOKEN_IDENTIFIER
 	;
 
 type=
@@ -225,8 +230,8 @@ named_type=
 	;
 
 index_type =
-	enumerated_type
-	| subrange_type
+	enumerated_type.e {:return e; :}
+	| subrange_type.e {:return e; :}
 	;
 
 enumerated_type=
@@ -240,7 +245,7 @@ enumerated_type=
 			new TypeItemEnum(cpt, it.next())
 		);
 		cpt++;
-		String last;
+		String last = "";
 
 		while(it.hasNext()) {
 			last = it.next();
@@ -321,13 +326,10 @@ variable_declaration_part=
 variable_declaration_list=
 	variable_declaration_list.l variable_declaration.e {:
 		l.add(e);
-
 		return l;
 	:}
 	| variable_declaration.e {:
-		NodeList l = new NodeList();
-		l.add(e);
-
+		NodeList l = new NodeList(e);
 		return l;
 	:}
 	;
@@ -461,6 +463,8 @@ block=
 		NodeList l = new NodeList();
 		l.add(e1);
 		l.add(e2);
+
+		return l;
 	:}
 	;
 
@@ -471,8 +475,8 @@ statement_list=
 		return l;
 	:}
 	| statement.e {:
-		NodeList l = new NodeList();
-		l.add(e);
+		System.out.println("New statement list");
+		NodeList l = new NodeList(e);
 
 		return l;
 	:}
@@ -480,6 +484,7 @@ statement_list=
 
 statement=
 	simple_statement.e {:
+		System.out.println("New simple statement");
 		return e;
 	:}
 	| structured_statement.e {:
@@ -489,6 +494,7 @@ statement=
 
 simple_statement=
 	assignment_statement.e {:
+		System.out.println("New assignment statement");
 		return e;
 	:}
 	| procedure_statement.e {:
@@ -513,6 +519,8 @@ simple_statement=
 
 assignment_statement=
 	variable_access.v TOKEN_AFF expression.e TOKEN_SEMIC {:
+		System.out.println(v);
+			System.out.println(e);
 		//Affectation d'une valeur dans une variable, penser a faire la verification du type
 		return new NodeAssign(v, e); //Je ne suis pas sure que ce soit ce type de node a utiliser
 	:}
@@ -655,7 +663,7 @@ case_default=
 
 variable_access=
 	TOKEN_IDENTIFIER.e {:
-		String typename = typeEnvironment.getVariableValue((String)e.value);
+		String typename = "Integer"; //typeEnvironment.getVariableValue((String)e.value);
 		switch(typename) {
 			case "int":
 				return new NodeId((String)e.value, new TypeInt());
@@ -713,9 +721,10 @@ expression=
 literal=
 	TOKEN_LIT_INTEGER.e {:
 	//TODO: Verifier la valeur et generer une erreur si elle est trop grande
-		return new NodeLiteral(new TypeInt((Integer)e.value), e.value);
+		System.out.println("Node literal : "+e.value);
+		return new NodeLiteral(new TypeInt(), e.value);
 	:}
-	| TOKEN_LIT_STRING.e {: return new NodeLiteral(new TypeString(), (String)e.value); :}
+	| TOKEN_LIT_STRING.e {: System.out.println("Node literal : "+e.value);return new NodeLiteral(new TypeString(), (String)e.value); :}
 	| TOKEN_TRUE  {: return new NodeLiteral(new TypeBoolean(), true); :}
 	| TOKEN_FALSE {: return new NodeLiteral(new TypeBoolean(), false);:}
 	| TOKEN_NULL  {: return new NodeLiteral(new TypePointer(), null); :}
