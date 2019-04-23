@@ -89,6 +89,9 @@
 %typeof statement="Node";
 %typeof switch_statement="NodeSwitch";
 %typeof structured_statement="Node";
+%typeof println_statement="NodeExp";
+%typeof readln_statement="NodeExp";
+%typeof new_statement="NodeNew";
 
 %goal program;
 
@@ -341,7 +344,9 @@ expression_list=
 	;
 
 new_statement=
-	TOKEN_NEW variable_access TOKEN_SEMIC
+	TOKEN_NEW variable_access.e TOKEN_SEMIC {:
+		return new NodeNew(e);
+	:}
 	;
 
 dispose_statement=
@@ -351,11 +356,17 @@ dispose_statement=
 	;
 
 println_statement=
-	TOKEN_PRINTLN expression TOKEN_SEMIC
+	TOKEN_PRINTLN expression.e TOKEN_SEMIC {:
+		//Je ne suis pas sure de tout de ce qu'il faut renvoyer...
+		return new NodeExp(e);
+	:}
 	;
 
 readln_statement=
-	TOKEN_READLN expression TOKEN_SEMIC
+	TOKEN_READLN expression.e TOKEN_SEMIC {:
+		//Je ne suis pas sure non plus pour celui-ci
+		return new NodeExp(e);
+	:}
 	;
 
 return_statement=
