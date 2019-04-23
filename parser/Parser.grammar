@@ -88,6 +88,7 @@
 %typeof return_statement="NodeReturn";
 %typeof statement="Node";
 %typeof switch_statement="NodeSwitch";
+%typeof println_statement="NodeExp";
 
 %goal program;
 
@@ -350,7 +351,10 @@ dispose_statement=
 	;
 
 println_statement=
-	TOKEN_PRINTLN expression TOKEN_SEMIC
+	TOKEN_PRINTLN expression.e TOKEN_SEMIC {:
+		//Je ne suis pas sure de tout de ce qu'il faut renvoyer...
+		return new NodeExp(e);
+	:}
 	;
 
 readln_statement=
