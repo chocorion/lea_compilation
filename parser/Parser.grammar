@@ -120,8 +120,9 @@
 %typeof feature_list_type="TypeFeatureList";
 %typeof pointer_type="TypePointer";
 %typeof enumerated_type="TypeEnumRange";
-%typeof array_type = "Type";
+%typeof array_type = "TypeArray";
 %typeof subrange_type = "Type";
+%typeof range_type="Type";
 
 %goal program;
 
@@ -187,6 +188,9 @@ type_declaration_list=
 
 type_declaration=
 	type_declaration_head TOKEN_AFF type TOKEN_SEMIC
+	{:
+
+	:}
 	;
 
 type_declaration_head=
@@ -228,24 +232,26 @@ index_type =
 enumerated_type=
 	init_enumerated_type TOKEN_LPAR identifier_list.l TOKEN_RPAR
 	{:
-		TypeEnumRange enum = new TypeEnumRange();
+		TypeEnumRange enumRange = new TypeEnumRange();
 
 		Iterator<String> it = l.iterator();
 		int cpt = 0;
-		enum.setFirst(
-			new TypeItemEnum(cpt, ((NodeId)it.next()).getName())
+		enumRange.setFirst(
+			new TypeItemEnum(cpt, it.next())
 		);
 		cpt++;
-		NodeId last;
+		String last;
 
 		while(it.hasNext()) {
 			last = it.next();
 			cpt++;
 		}
 
-		enum.setLast(cpt, last.getName());
+		enumRange.setLast(
+			new TypeItemEnum(cpt, last)
+		);
 
-		return enum;
+		return enumRange;
 	:}
 	;
 
@@ -257,23 +263,23 @@ subrange_type=
 	{:
 		return new TypeInt();
 	:}
-	| TOKEN_IDENTIFIER TOKEN_DOTDOT TOKEN_IDENTIFIER
+	| TOKEN_IDENTIFIER.i TOKEN_DOTDOT TOKEN_IDENTIFIER
 	{:
-		return new TypeNamed(); // TODO: recuperer le type des deux identifier (ou un seul) dans l'environnement
+		return new TypeNamed((String) i.value); // TODO: recuperer le type des deux identifier (ou un seul) dans l'environnement
 	:}
 	;
 
 array_type=
-	TOKEN_ARRAY TOKEN_LBRACKET range_type TOKEN_RBRACKET TOKEN_OF type.t
+	TOKEN_ARRAY TOKEN_LBRACKET range_type.r TOKEN_RBRACKET TOKEN_OF type.t
 	{:
-		return t;
+		return new TypeArray(r,t);
 	:}
 	;
 
 range_type=
-	enumerated_type
-	| subrange_type
-	| named_type
+	enumerated_type.e {: return e; :}
+	| subrange_type.e {: return e; :}
+	| named_type.e 	  {: return e; :}
 	;
 
 pointer_type=
@@ -332,7 +338,7 @@ variable_declaration=
 		Iterator<String> it = l.iterator();
 
 		while(it.hasNext()) {
-			declaration_list.add(new NodeId(it.next(), type));
+			declaration_list.add(new NodeId(it.next(), t));
 		}
 
 		return declaration_list;
@@ -628,11 +634,14 @@ case_statement_list=
 case_statement=
 	TOKEN_CASE identifier_list.i TOKEN_COLON statement.s
 	{:
+
+		Iterator<String> it = i.iterator();
 		NodeCaseList l = new NodeCaseList();
-		for(int x = 0; x < i.size(); x++) {
-			NodeId n = (NodeId) i.get(x);
-			l.add(new NodeCase(n.toString(),s));
+
+		while(it.hasNext()) {
+			l.add(new NodeCase(it.next(), s));
 		}
+
 		return l;
 	:}
 	;
