@@ -24,7 +24,7 @@
 				Symbol.getColumn(token.getStart()));
 		}
 
-	private Environment typeEnvironment = new Environment("types");
+	private EnvironmentType typeEnvironment = new EnvironmentType("types");
 	private Environment procedureEnvironment = new Environment("procedures");
 	private StackEnvironment stackEnvironment = new StackEnvironment("local variables stack");
 	private String type_declaration_name;
@@ -340,7 +340,9 @@ variable_declaration=
 		Iterator<String> it = l.iterator();
 
 		while(it.hasNext()) {
-			declaration_list.add(new NodeId(it.next(), t));
+			String s = it.next();
+			declaration_list.add(new NodeId(s, t));
+			typeEnvironment.put(s,t);
 		}
 
 		return declaration_list;
@@ -663,17 +665,7 @@ case_default=
 
 variable_access=
 	TOKEN_IDENTIFIER.e {:
-		String typename = "Integer"; //typeEnvironment.getVariableValue((String)e.value);
-		switch(typename) {
-			case "int":
-				return new NodeId((String)e.value, new TypeInt());
-			case "string":
-				return new NodeId((String)e.value, new TypeString());
-			case "boolean":
-				return new NodeId((String)e.value, new TypeBoolean());
-			default:
-				return new NodeId((String)e.value, new TypeNamed(typename));
-		}
+			return new NodeId((String)e.value, typeEnvironment.getVariableValue((String)e.value));
 	:}
 	| variable_access.t TOKEN_LBRACKET expression.e TOKEN_RBRACKET
 	{:
