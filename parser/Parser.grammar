@@ -80,7 +80,6 @@
 %typeof case_statement = "NodeCaseList";
 %typeof case_statement_list = "NodeCaseList";
 %typeof variable_access = "NodeExp";
-%typeof identifier_list = "NodeList";
 %typeof expression_list = "NodeList";
 %typeof type_declaration_list="NodeList";
 %typeof if_statement="NodeIf";
@@ -97,11 +96,25 @@
 %typeof assignment_statement="NodeAssign";
 %typeof procedure_expression="NodeCallFct";
 %typeof procedure_statement="NodeCallFct";
-%typeof statement="Node"; //Pas d'idee pour le moment
 %typeof statement_list="NodeList";
 %typeof argt="NodeIf";
 %typeof argt_list="NodeList";
 %typeof argt_part="NodeList";
+%typeof procedure_head="NodeCallFct";
+%typeof procedure_declaration_head="NodeCallFct";
+%typeof procedure_definition_head="NodeCallFct";
+%typeof identifier_list="ArrayList";
+%typeof variable_declaration_list="NodeList";
+%typeof variable_declaration="NodeList";
+%typeof variable_declaration_part="NodeList";
+%typeof structure_type="TypeStruct";
+
+%typeof type="Type";
+%typeof simple_type="TypeAtomic";
+%typeof named_type="TypeNamed";
+%typeof feature_type="TypeFeature";
+%typeof feature_list_type="TypeFeatureList";
+%typeof pointer_type="TypePointer";
 
 %goal program;
 
@@ -174,22 +187,30 @@ type_declaration_head=
 	;
 
 type=
-	simple_type
-	| named_type
-	| index_type
-	| array_type
-	| pointer_type
-	| structure_type
+	simple_type.e {: return e; :}
+	| named_type.e {: return e; :}
+	| index_type.e {: return e; :}
+	| array_type.e {: return e; :}
+	| pointer_type.e {: return e; :}
+	| structure_type.e {: return e; :}
 	;
 
 simple_type=
-	TOKEN_STRING
-	| TOKEN_INTEGER
-	| TOKEN_BOOLEAN
+	TOKEN_STRING {:
+		return new TypeString();
+	:}
+	| TOKEN_INTEGER {:
+		return new TypeInt();
+	:}
+	| TOKEN_BOOLEAN {:
+		return new TypeBoolean();
+	:}
 	;
 
 named_type=
-	TOKEN_IDENTIFIER
+	TOKEN_IDENTIFIER.e {:
+		return new TypeNamed(e.value);
+	:}
 	;
 
 index_type=
@@ -220,39 +241,77 @@ range_type=
 	;
 
 pointer_type=
-	TOKEN_CIRC type
+	TOKEN_CIRC type.t {:
+		return new TypePointer(t);
+	:}
 	;
 
 structure_type=
-	TOKEN_STRUCT TOKEN_LBRACE feature_list_type TOKEN_RBRACE
+	TOKEN_STRUCT TOKEN_LBRACE feature_list_type.t TOKEN_RBRACE {:
+		return new TypeStruct(t.getType());
+	:}
 	;
 
 feature_list_type=
-	feature_list_type feature_type
-	| feature_type
+	feature_list_type.e feature_type.f {:
+		//Penser a verifier les types plus tard
+		return e;
+	:}
+	| feature_type.e {:
+		return new TypeFeatureList(e.getType());
+	:}
 	;
 
 feature_type=
-	TOKEN_IDENTIFIER TOKEN_COLON type TOKEN_SEMIC
+	TOKEN_IDENTIFIER.n TOKEN_COLON type.t TOKEN_SEMIC {:
+		return new TypeFeature((String)n.value, t);
+	:}
 	;
 
 variable_declaration_part=
 	/* empty */
-	| TOKEN_VAR variable_declaration_list
+	| TOKEN_VAR variable_declaration_list.e {:
+		//Pas sur
+		return e;
+	:}
 	;
 
 variable_declaration_list=
-	variable_declaration_list variable_declaration
-	| variable_declaration
+	variable_declaration_list.l variable_declaration.e {:
+		l.add(e);
+
+		return l;
+	:}
+	| variable_declaration.e {:
+		NodeList l = new NodeList();
+		l.add(e);
+
+		return l;
+	:}
 	;
 
 variable_declaration=
-	identifier_list TOKEN_COLON type TOKEN_SEMIC
+	identifier_list.l TOKEN_COLON type.t TOKEN_SEMIC {:
+		NodeList declaration_list = new NodeList();
+
+		for (String s : l) {
+			declaration_list.add(new NodeId(s, t));
+		}
+
+		return declaration_list;
+	:}
 	;
 
 identifier_list=
-	identifier_list TOKEN_COMMA TOKEN_IDENTIFIER
-	| TOKEN_IDENTIFIER
+	identifier_list.l TOKEN_COMMA TOKEN_IDENTIFIER.e {:
+		l.add((String)e.value);
+	:}
+	| TOKEN_IDENTIFIER.e {:
+		ArrayList<String> n = new ArrayList<>();
+		n.add((String)e.value);
+
+		return n;
+	:}
 	;
 
 procedure_definition_part=
@@ -260,26 +319,64 @@ procedure_definition_part=
 	;
 
 procedure_definition_list=
-	procedure_definition_list procedure_definition
-	| procedure_definition
+	procedure_definition_list.l procedure_definition.f
+	{:
+		l.add(f);
+		return l;
+	:}
+	| procedure_definition.f
+	{:
+		NodeList l = new NodeList();
+		l.add(f);
+		return l;
+	:}
 	;
 
 procedure_definition=
-	procedure_definition_head block
+	procedure_definition_head.f block.b
+	{:
+		NodeList l = new NodeList();
+		l.add(f);
+		l.add(b);
+		return l;
+	:}
 	| procedure_declaration_head TOKEN_SEMIC
+	{:
+		NodeList l = new NodeList();
+		l.add(f);
+		l.add(new NodeList());
+		return l;
+	:}
 	;
 
 procedure_definition_head=
-	procedure_head
+	procedure_head.e
+	{:
+		return e;
+	:}
 	;
 
 procedure_declaration_head=
-	procedure_head
+	procedure_head.e
+	{:
+		return e;
+	:}
 	;
 
 procedure_head=
-	TOKEN_PROCEDURE TOKEN_IDENTIFIER TOKEN_LPAR argt_part TOKEN_RPAR
-	| TOKEN_FUNCTION TOKEN_IDENTIFIER TOKEN_LPAR argt_part TOKEN_RPAR TOKEN_COLON type
+	TOKEN_PROCEDURE TOKEN_IDENTIFIER.id TOKEN_LPAR argt_part.args TOKEN_RPAR
+	{:
+		return new NodeCallFct((String) id.value,new TypeVoid(),new TypeFunct((String) id.value, new TypeTuple(), new TypeVoid()));
+	:}
+	| TOKEN_FUNCTION TOKEN_IDENTIFIER.id TOKEN_LPAR argt_part.args TOKEN_RPAR TOKEN_COLON type.t
+	{:
+		TypeTuple types = new TypeTuple();
+		for(int x = 0; x < args.size(); x++) {
+			types.add(args.get(x));
+		}
+
+		return new NodeCallFct((String) id.value,t,new TypeFunct((String) id.value, types, t));
+	:}
 	;
 
 argt_part=
@@ -306,19 +403,22 @@ argt_list=
 argt=
 	TOKEN_IDENTIFIER.name TOKEN_COLON type.t
 	{:
-		//Mettre à jour l'environment qui nous permet d'enregistrer les types
-		return new NodeId(name.value, t);
+		//Mettre a jour l'environment qui nous permet d'enregistrer les types
+		return new NodeId((String) name.value, t);
 	:}
 
 	;
 
 block=
-{://Aucune idee de ce qu'il faut renvoyer comme type, sachant que Node est abstract et ne peut etre
-  //implemente. Node list ?:}
-	variable_declaration_part
+	variable_declaration_part.e1
 	TOKEN_BEGIN
-		statement_list
+		statement_list.e2
 	TOKEN_END
+	{:
+		NodeList l = new NodeList();
+		l.add(e1);
+		l.add(e2);
+	:}
 	;
 
 statement_list=
@@ -370,8 +470,8 @@ simple_statement=
 
 assignment_statement=
 	variable_access.v TOKEN_AFF expression.e TOKEN_SEMIC {:
-		//Affectation d'une valeur dans une variable, penser à faire la vérification du type
-		return new NodeAssign(v, e); //Je ne suis pas sure que ce soit ce type de node à utiliser
+		//Affectation d'une valeur dans une variable, penser a faire la verification du type
+		return new NodeAssign(v, e); //Je ne suis pas sure que ce soit ce type de node a utiliser
 	:}
 	;
 
@@ -385,11 +485,11 @@ procedure_expression=
 	TOKEN_IDENTIFIER.name TOKEN_LPAR expression_part.e TOKEN_RPAR {:
 		//Appel de fonction, je pense qu'il faut renvoyer un node CallFct.
 		//public NodeCallFct(String name, TypeFunct type, NodeList args)
-		String name = name.value;
+		String n = (String) name.value;
 		TypeFunct type = null; //TODO
-		//J'imagine qu'on récupère le type en utilisant l'environment.. qui n'est pas encore implémenté
+		//J'imagine qu'on recupere le type en utilisant l'environment.. qui n'est pas encore implemente
 
-		return new NodeCallFct(name, type, e);
+		return new NodeCallFct(n, type, e);
 	:}
 	;
 

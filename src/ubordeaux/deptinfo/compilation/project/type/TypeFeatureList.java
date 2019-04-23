@@ -19,4 +19,8 @@ public class TypeFeatureList extends TypeComplex {
 		return new TypeFeatureList((Type)this.get(0).clone());
 	}
 
+	public Type getType() {
+		return this.componant.get(0);
+	}
+
 }
