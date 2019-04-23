@@ -14,4 +14,8 @@ public abstract class NodeExp extends Node {
 		return this.type;
 	}
 
+	public void getType(Type t) {
+		this.type = t;
+	}
+
 }
