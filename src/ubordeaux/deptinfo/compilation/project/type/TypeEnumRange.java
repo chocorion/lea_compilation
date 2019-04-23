@@ -6,7 +6,7 @@ public class TypeEnumRange extends TypeRange {
 
 	private String name;
 	private static int uniqName;
-	
+
 	public TypeEnumRange(TypeItemEnum min, TypeItemEnum max) {
 		super(min, max);
 		this.name = Integer.toString(uniqName++);
@@ -22,11 +22,11 @@ public class TypeEnumRange extends TypeRange {
 		this.name = Integer.toString(uniqName++);
 	}
 
-	public void setFirst(Type min) {
+	public void setFirst(TypeItemEnum min) {
 		this.first = min;
 	}
 
-	public void setLast(Type max) {
+	public void setLast(TypeItemEnum max) {
 		this.last = max;
 	}
 

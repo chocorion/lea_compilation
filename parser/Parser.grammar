@@ -97,17 +97,21 @@
 %typeof procedure_expression="NodeCallFct";
 %typeof procedure_statement="NodeCallFct";
 %typeof statement_list="NodeList";
-%typeof argt="NodeIf";
+%typeof argt="NodeId";
 %typeof argt_list="NodeList";
 %typeof argt_part="NodeList";
 %typeof procedure_head="NodeCallFct";
 %typeof procedure_declaration_head="NodeCallFct";
 %typeof procedure_definition_head="NodeCallFct";
-%typeof identifier_list="NodeList";
+%typeof identifier_list="IdentifierList";
 %typeof variable_declaration_list="NodeList";
 %typeof variable_declaration="NodeList";
 %typeof variable_declaration_part="NodeList";
 %typeof structure_type="TypeStruct";
+%typeof procedure_definition_part="NodeList";
+%typeof procedure_definition_list="NodeList";
+%typeof procedure_definition = "NodeList";
+%typeof block = "NodeList";
 
 %typeof type="Type";
 %typeof simple_type="TypeAtomic";
@@ -115,6 +119,9 @@
 %typeof feature_type="TypeFeature";
 %typeof feature_list_type="TypeFeatureList";
 %typeof pointer_type="TypePointer";
+%typeof enumerated_type="TypeEnumRange";
+%typeof array_type = "Type";
+%typeof subrange_type = "Type";
 
 %goal program;
 
@@ -209,17 +216,37 @@ simple_type=
 
 named_type=
 	TOKEN_IDENTIFIER.e {:
-		return new TypeNamed(e.value);
+		return new TypeNamed((String)e.value);
 	:}
 	;
 
-index_type=
+index_type =
 	enumerated_type
 	| subrange_type
 	;
 
 enumerated_type=
-	init_enumerated_type TOKEN_LPAR identifier_list TOKEN_RPAR
+	init_enumerated_type TOKEN_LPAR identifier_list.l TOKEN_RPAR
+	{:
+		TypeEnumRange enum = new TypeEnumRange();
+
+		Iterator<String> it = l.iterator();
+		int cpt = 0;
+		enum.setFirst(
+			new TypeItemEnum(cpt, ((NodeId)it.next()).getName())
+		);
+		cpt++;
+		NodeId last;
+
+		while(it.hasNext()) {
+			last = it.next();
+			cpt++;
+		}
+
+		enum.setLast(cpt, last.getName());
+
+		return enum;
+	:}
 	;
 
 init_enumerated_type=
@@ -227,11 +254,20 @@ init_enumerated_type=
 
 subrange_type=
 	TOKEN_LIT_INTEGER TOKEN_DOTDOT TOKEN_LIT_INTEGER
+	{:
+		return new TypeInt();
+	:}
 	| TOKEN_IDENTIFIER TOKEN_DOTDOT TOKEN_IDENTIFIER
+	{:
+		return new TypeNamed(); // TODO: recuperer le type des deux identifier (ou un seul) dans l'environnement
+	:}
 	;
 
 array_type=
-	TOKEN_ARRAY TOKEN_LBRACKET range_type TOKEN_RBRACKET TOKEN_OF type
+	TOKEN_ARRAY TOKEN_LBRACKET range_type TOKEN_RBRACKET TOKEN_OF type.t
+	{:
+		return t;
+	:}
 	;
 
 range_type=
@@ -293,11 +329,10 @@ variable_declaration_list=
 variable_declaration=
 	identifier_list.l TOKEN_COLON type.t TOKEN_SEMIC {:
 		NodeList declaration_list = new NodeList();
+		Iterator<String> it = l.iterator();
 
-		for(int x = 0; x < l.size(); x++) {
-			NodeId nodeid = (NodeId) l.get(x);
-			nodeid.setType(t);
-			l.add(nodeid);
+		while(it.hasNext()) {
+			declaration_list.add(new NodeId(it.next(), type));
 		}
 
 		return declaration_list;
@@ -306,19 +341,18 @@ variable_declaration=
 
 identifier_list=
 	identifier_list.l TOKEN_COMMA TOKEN_IDENTIFIER.e {:
-		l.add(new NodeId((String)e.value, new TypeVoid());
+		l.add((String)e.value);
 		return l;
 	:}
 	| TOKEN_IDENTIFIER.e {:
-		NodeList l = new NodeList();
-		NodeId n = new NodeId((String) e.value, new TypeVoid());
-		l.add(n);
-		return l;
+		return new IdentifierList((String) e.value);
 	:}
 	;
 
 procedure_definition_part=
-	| procedure_definition_list
+	| procedure_definition_list.e {:
+		return e;
+	:}
 	;
 
 procedure_definition_list=
@@ -343,7 +377,7 @@ procedure_definition=
 		l.add(b);
 		return l;
 	:}
-	| procedure_declaration_head TOKEN_SEMIC
+	| procedure_declaration_head.f TOKEN_SEMIC
 	{:
 		NodeList l = new NodeList();
 		l.add(f);
@@ -531,14 +565,14 @@ dispose_statement=
 println_statement=
 	TOKEN_PRINTLN expression.e TOKEN_SEMIC {:
 		//Je ne suis pas sure de tout de ce qu'il faut renvoyer...
-		return new NodeExp(e);
+		return e;
 	:}
 	;
 
 readln_statement=
 	TOKEN_READLN expression.e TOKEN_SEMIC {:
 		//Je ne suis pas sure non plus pour celui-ci
-		return new NodeExp(e);
+		return e;
 	:}
 	;
 
