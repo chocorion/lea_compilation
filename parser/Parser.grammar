@@ -103,7 +103,7 @@
 %typeof procedure_head="NodeCallFct";
 %typeof procedure_declaration_head="NodeCallFct";
 %typeof procedure_definition_head="NodeCallFct";
-%typeof identifier_list="ArrayList";
+%typeof identifier_list="NodeList";
 %typeof variable_declaration_list="NodeList";
 %typeof variable_declaration="NodeList";
 %typeof variable_declaration_part="NodeList";
@@ -294,8 +294,10 @@ variable_declaration=
 	identifier_list.l TOKEN_COLON type.t TOKEN_SEMIC {:
 		NodeList declaration_list = new NodeList();
 
-		for (String s : l) {
-			declaration_list.add(new NodeId(s, t));
+		for(int x = 0; x < l.size(); x++) {
+			NodeId nodeid = (NodeId) l.get(x);
+			nodeid.setType(t);
+			l.add(nodeid);
 		}
 
 		return declaration_list;
@@ -304,13 +306,14 @@ variable_declaration=
 
 identifier_list=
 	identifier_list.l TOKEN_COMMA TOKEN_IDENTIFIER.e {:
-		l.add((String)e.value);
+		l.add(new NodeId((String)e.value, new TypeVoid());
+		return l;
 	:}
 	| TOKEN_IDENTIFIER.e {:
-		ArrayList<String> n = new ArrayList<>();
-		n.add((String)e.value);
-
-		return n;
+		NodeList l = new NodeList();
+		NodeId n = new NodeId((String) e.value, new TypeVoid());
+		l.add(n);
+		return l;
 	:}
 	;
 
@@ -366,16 +369,16 @@ procedure_declaration_head=
 procedure_head=
 	TOKEN_PROCEDURE TOKEN_IDENTIFIER.id TOKEN_LPAR argt_part.args TOKEN_RPAR
 	{:
-		return new NodeCallFct((String) id.value,new TypeVoid(),new TypeFunct((String) id.value, new TypeTuple(), new TypeVoid()));
+		return new NodeCallFct((String) id.value,new TypeFunct((String) id.value, new TypeTuple(), new TypeVoid()));
 	:}
 	| TOKEN_FUNCTION TOKEN_IDENTIFIER.id TOKEN_LPAR argt_part.args TOKEN_RPAR TOKEN_COLON type.t
 	{:
 		TypeTuple types = new TypeTuple();
 		for(int x = 0; x < args.size(); x++) {
-			types.add(args.get(x));
+			types.add(((NodeId) args.get(x)).getType());
 		}
 
-		return new NodeCallFct((String) id.value,t,new TypeFunct((String) id.value, types, t));
+		return new NodeCallFct((String) id.value,new TypeFunct((String) id.value, types, t));
 	:}
 	;
 
