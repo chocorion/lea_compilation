@@ -89,6 +89,7 @@
 %typeof statement="Node";
 %typeof switch_statement="NodeSwitch";
 %typeof println_statement="NodeExp";
+%typeof readln_statement="NodeExp";
 
 %goal program;
 
@@ -358,7 +359,10 @@ println_statement=
 	;
 
 readln_statement=
-	TOKEN_READLN expression TOKEN_SEMIC
+	TOKEN_READLN expression.e TOKEN_SEMIC {:
+		//Je ne suis pas sure non plus pour celui-ci
+		return new NodeExp(e);
+	:}
 	;
 
 return_statement=
