@@ -88,6 +88,7 @@
 %typeof return_statement="NodeReturn";
 %typeof statement="Node";
 %typeof switch_statement="NodeSwitch";
+%typeof structured_statement="Node";
 
 %goal program;
 
@@ -364,10 +365,10 @@ return_statement=
 	;
 
 structured_statement=
-	block
-	| if_statement
-	| while_statement
-	| switch_statement
+	block.e {:return e;:}
+	| if_statement.e {:return e;:}
+	| while_statement.e {:return e;:}
+	| switch_statement.e {:return e;:}
 	;
 
 if_statement=
