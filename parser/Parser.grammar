@@ -90,6 +90,7 @@
 %typeof switch_statement="NodeSwitch";
 %typeof println_statement="NodeExp";
 %typeof readln_statement="NodeExp";
+%typeof new_statement="NodeNew";
 
 %goal program;
 
@@ -342,7 +343,9 @@ expression_list=
 	;
 
 new_statement=
-	TOKEN_NEW variable_access TOKEN_SEMIC
+	TOKEN_NEW variable_access.e TOKEN_SEMIC {:
+		return new NodeNew(e);
+	:}
 	;
 
 dispose_statement=
