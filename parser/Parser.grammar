@@ -87,6 +87,7 @@
 %typeof dispose_statement="NodeDispose";
 %typeof return_statement="NodeReturn";
 %typeof statement="Node";
+%typeof switch_statement="NodeSwitch";
 
 %goal program;
 
@@ -385,7 +386,9 @@ while_statement=
 	;
 
 switch_statement=
-	TOKEN_SWITCH expression TOKEN_BEGIN case_statement_list TOKEN_END
+	TOKEN_SWITCH expression.e TOKEN_BEGIN case_statement_list.l TOKEN_END {:
+		return new NodeSwitch(e, l);
+	:}
 	;
 
 case_statement_list=
