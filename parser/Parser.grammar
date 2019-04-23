@@ -166,10 +166,18 @@ program=
 	TOKEN_END {:
 		System.out.println("Begin program");
 		NodeList p = new NodeList();
-		p.add(p1);
-		p.add(p2);
-		p.add(p3);
-		p.add(p4);
+		if(p1 != null) {
+			p.add(p1);
+		}
+		if(p2 != null) {
+			p.add(p2);
+		}
+		if(p3 != null) {
+			p.add(p3);
+		}
+		if(p4 != null) {
+			p.add(p4);
+		}
 
 		return p;
 	:}
@@ -342,7 +350,7 @@ variable_declaration=
 		while(it.hasNext()) {
 			String s = it.next();
 			declaration_list.add(new NodeId(s, t));
-			typeEnvironment.put(s,t);
+			typeEnvironment.putVariable(s,t);
 		}
 
 		return declaration_list;
@@ -714,7 +722,7 @@ literal=
 	TOKEN_LIT_INTEGER.e {:
 	//TODO: Verifier la valeur et generer une erreur si elle est trop grande
 		System.out.println("Node literal : "+e.value);
-		return new NodeLiteral(new TypeInt(), e.value);
+		return new NodeLiteral(new TypeInt((Integer)e.value), e.value);
 	:}
 	| TOKEN_LIT_STRING.e {: System.out.println("Node literal : "+e.value);return new NodeLiteral(new TypeString(), (String)e.value); :}
 	| TOKEN_TRUE  {: return new NodeLiteral(new TypeBoolean(), true); :}

@@ -5,30 +5,28 @@ import java.util.Map;
 import ubordeaux.deptinfo.compilation.project.type.*;
 
 /**
- * Implementation of an emulated environment with variables
+ * Implementation of an emulated environment to link variables with their type
  *
- * @author Lionel CLÉMENT
+ * @author Adrien Boitelle
  */
-public class Environment implements EnvironmentInt {
+public class EnvironmentType {
 
     private String name;
     private Map<String, Type> table;
 
-    public Environment(String name) {
+    public EnvironmentType(String name) {
         this.name = name;
         this.table = new HashMap<>();
     }
 
-    public Environment() {
+    public EnvironmentType() {
         this("default");
     }
 
-    @Override
     public void putVariable(String variable, Type value) {
         table.put(variable, value);
     }
 
-    @Override
     public Type getVariableValue(String variable) {
         return table.get(variable);
     }
