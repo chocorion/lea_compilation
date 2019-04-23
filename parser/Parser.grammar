@@ -177,7 +177,7 @@ program=
 
 type_declaration_part=
 	/* empty */
-	| TOKEN_TYPE.t type_declaration_list.e {:
+	| TOKEN_TYPE type_declaration_list.e {:
 		return e;
 	:}
 	;
@@ -325,7 +325,6 @@ variable_declaration_part=
 
 variable_declaration_list=
 	variable_declaration_list.l variable_declaration.e {:
-		typeEnvironment.put((String) t,)
 		l.add(e);
 		return l;
 	:}
@@ -664,7 +663,7 @@ case_default=
 
 variable_access=
 	TOKEN_IDENTIFIER.e {:
-		String typename = typeEnvironment.getVariableValue((String)e.value);
+		String typename = "Integer"; //typeEnvironment.getVariableValue((String)e.value);
 		switch(typename) {
 			case "int":
 				return new NodeId((String)e.value, new TypeInt());
