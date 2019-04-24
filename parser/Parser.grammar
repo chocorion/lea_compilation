@@ -464,14 +464,17 @@ argt=
 
 	;
 
-block=
+block= 
 	variable_declaration_part.e1
 	TOKEN_BEGIN
-		statement_list.e2
+	statement_list.e2
 	TOKEN_END
 	{:
 		NodeList l = new NodeList();
-		l.add(e1);
+		if (e1 != null) {
+			l.add(e1);
+		}
+		
 		l.add(e2);
 
 		return l;
@@ -607,9 +610,9 @@ return_statement=
 	;
 
 structured_statement=
-	block.e {:return e;:}
+	block.e 		 {: return e; :}
 	| if_statement.e {:return e;:}
-	| while_statement.e {:return e;:}
+	| while_statement.e  {:return e;:}
 	| switch_statement.e {:return e;:}
 	;
 
