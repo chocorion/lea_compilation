@@ -121,7 +121,7 @@
 %typeof pointer_type="TypePointer";
 %typeof enumerated_type="TypeEnumRange";
 %typeof array_type = "TypeArray";
-%typeof subrange_type = "Type";
+%typeof subrange_type = "TypeArray";
 %typeof range_type="Type";
 %typeof index_type="Type";
 %typeof type_declaration = "NodeId";
@@ -268,11 +268,11 @@ subrange_type=
 	TOKEN_LIT_INTEGER TOKEN_DOTDOT TOKEN_LIT_INTEGER
 	{:
 	//MERDE ICI
-		return new TypeInt();
+		return new TypeArray(new TypeInt(),new TypeInt());
 	:}
-	| TOKEN_IDENTIFIER.i TOKEN_DOTDOT TOKEN_IDENTIFIER
+	| TOKEN_IDENTIFIER.i1 TOKEN_DOTDOT TOKEN_IDENTIFIER.i2
 	{:
-		return new TypeNamed((String) i.value); // TODO: recuperer le type des deux identifier (ou un seul) dans l'environnement
+		return new TypeArray(typeEnvironment.getVariableValue((String) i1.value),typeEnvironment.getVariableValue((String) i2.value)); // TODO: recuperer le type des deux identifier (ou un seul) dans l'environnement
 	:}
 	;
 
@@ -672,7 +672,7 @@ variable_access=
 	:}
 	| variable_access.t TOKEN_LBRACKET expression.e TOKEN_RBRACKET
 	{:
-		return new NodeArrayAccess(t,e);
+		return new NodeArrayAccess(t,e); 
 	:}
 	| expression.e TOKEN_CIRC
 	{:
