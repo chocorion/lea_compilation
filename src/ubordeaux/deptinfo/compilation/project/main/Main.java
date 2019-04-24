@@ -27,6 +27,9 @@ public class Main {
                     System.err.println("*** Analyse syntaxique ok");
                     System.out.println(result);
                     result.toDot("coucou.dot");
+
+                    System.out.println("Checking type : " + checksType);
+
                     if (checksType) {
                         if (!result.checksType()) {
                             System.err.println("*** Erreur de typage");

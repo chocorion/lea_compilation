@@ -54,14 +54,6 @@
 // LITERALS
 %terminals TOKEN_IDENTIFIER, TOKEN_LIT_INTEGER, TOKEN_LIT_STRING, TOKEN_TRUE, TOKEN_FALSE, TOKEN_NULL;
 
-/***
-* A completer
-***/
-
-//D'apres ce que j'ai lu, faut mettre tous les operateurs en left,
-//Sauf les operateurs if/then/else.
-//Il semble qu'il faille bidouiller les if/then/else, la grammaire n'est pas tout a fait correcte
-
 %right TOKEN_IF, TOKEN_THEN, TOKEN_ELSE;
 %right TOKEN_CIRC;
 %right UNARY_MINUS;
@@ -198,6 +190,18 @@ type_declaration_list=
 type_declaration=
 	TOKEN_IDENTIFIER.i TOKEN_AFF type.t TOKEN_SEMIC
 	{:
+
+	//		System.out.println("GRAMMAR -> We are in type_declaration !");
+	//
+	//		//On regard s'il est pas deja declare
+	//		if (typeEnvironment.getVariableValue((String)i.value) != null) {
+	//			String error_message = (String)i.value + "is already declared !";
+	//			semanticError(error_message, i);
+	//			
+	//		} else {
+	//			typeEnvironment.putVariable((String)i.value, t);
+	//		}
+
 		//verification type
 		return new NodeId((String)i.value, t);
 	:}
@@ -337,14 +341,22 @@ variable_declaration_list=
 	;
 
 variable_declaration=
-	identifier_list.l TOKEN_COLON type.t TOKEN_SEMIC {:
+	identifier_list.l TOKEN_COLON.c type.t TOKEN_SEMIC {:
 		NodeList declaration_list = new NodeList();
 		Iterator<String> it = l.iterator();
 
 		while(it.hasNext()) {
 			String s = it.next();
-			declaration_list.add(new NodeId(s, t));
-			typeEnvironment.putVariable(s,t);
+
+			//On regarde s'il n'est pas deja declare
+			if (typeEnvironment.getVariableValue(s) != null) {
+				String error_message = s + " is already declared !";
+				semanticError(error_message, c);
+			} else {
+				declaration_list.add(new NodeId(s, t));
+				typeEnvironment.putVariable(s,t);
+			}
+
 		}
 
 		return declaration_list;
