@@ -18,7 +18,7 @@ import beaver.Scanner;
 %line
 %column
 
-Comm = \/\/~\n
+Comm = \/\*~(\*\/)|\/\/.*
 Identifier = [a-zA-Z_][a-zA-Z0-9_]*
 String = \"[^\"]{0,64}\"
 Integer = [0-9]+
