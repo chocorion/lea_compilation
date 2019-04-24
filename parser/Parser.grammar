@@ -25,7 +25,7 @@
 		}
 
 	private EnvironmentType typeEnvironment = new EnvironmentType("types");
-	private Environment procedureEnvironment = new Environment("procedures");
+	private EnvironmentType procedureEnvironment = new EnvironmentType("procedures");
 	private StackEnvironment stackEnvironment = new StackEnvironment("local variables stack");
 	private String type_declaration_name;
 
@@ -421,7 +421,10 @@ procedure_declaration_head=
 procedure_head=
 	TOKEN_PROCEDURE TOKEN_IDENTIFIER.id TOKEN_LPAR argt_part.args TOKEN_RPAR
 	{:
-		return new NodeCallFct((String) id.value,new TypeFunct((String) id.value, new TypeTuple(), new TypeVoid()));
+		TypeFunct t = new TypeFunct((String) id.value, new TypeTuple(), new TypeVoid());
+		procedureEnvironment.putVariable((String) id.value, t);
+		
+		return new NodeCallFct((String) id.value,t);
 	:}
 	| TOKEN_FUNCTION TOKEN_IDENTIFIER.id TOKEN_LPAR argt_part.args TOKEN_RPAR TOKEN_COLON type.t
 	{:
@@ -430,7 +433,10 @@ procedure_head=
 			types.add(((NodeId) args.get(x)).getType());
 		}
 
-		return new NodeCallFct((String) id.value,new TypeFunct((String) id.value, types, t));
+		TypeFunct type = new TypeFunct((String) id.value, types, t);
+		procedureEnvironment.putVariable((String) id.value, type);
+		
+		return new NodeCallFct((String) id.value, type);
 	:}
 	;
 
@@ -474,7 +480,7 @@ block=
 		if (e1 != null) {
 			l.add(e1);
 		}
-		
+
 		l.add(e2);
 
 		return l;
@@ -547,11 +553,8 @@ procedure_statement=
 
 procedure_expression=
 	TOKEN_IDENTIFIER.name TOKEN_LPAR expression_part.e TOKEN_RPAR {:
-		//Appel de fonction, je pense qu'il faut renvoyer un node CallFct.
-		//public NodeCallFct(String name, TypeFunct type, NodeList args)
 		String n = (String) name.value;
-		TypeFunct type = null; //TODO
-		//J'imagine qu'on recupere le type en utilisant l'environment.. qui n'est pas encore implemente
+		TypeFunct type = (TypeFunct) procedureEnvironment.getVariableValue(n);
 
 		return new NodeCallFct(n, type, e);
 	:}
