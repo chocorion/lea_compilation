@@ -57,7 +57,7 @@ public class StackEnvironment {
         for (int i = 0; i < stackSize; i++) {
             ret = stack.get(i).get(variable);
             if (ret != null) {
-                System.out.println("STACK Find !");
+                System.out.println("STACK Find ! " + ret);
                 return ret;
             }
         }
