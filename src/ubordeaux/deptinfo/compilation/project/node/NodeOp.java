@@ -1,5 +1,7 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
+import ubordeaux.deptinfo.compilation.project.intermediateCode.Binop;
+
 public class NodeOp extends NodeExp {
 
 	protected String name;
@@ -47,5 +49,35 @@ public class NodeOp extends NodeExp {
 		return null;
 		};
 	
+		public void generateIntermediateCode() {
+			if (checksType()){
+				int value = -1;
+				switch(this.name) {
+					case "PLUS":
+						value = 0;
+						break;
 
+					case "MINUS":
+						value = 1;
+						break;
+	
+					case "MUL":
+						value = 2;
+						break;
+					
+					case "DIV":
+						value = 3;
+						break;
+					
+					default:
+						System.err.println("Error in generateIntermediateCode, unknow operator " + this.name);
+
+				}
+				getOp1().generateIntermediateCode();
+				getOp2().generateIntermediateCode();
+
+				Binop binop = new Binop(value, getOp1().getExp(), getOp2().getExp());
+				super.exp = binop;
+			}
+		}
 }

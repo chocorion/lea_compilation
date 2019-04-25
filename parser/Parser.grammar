@@ -772,7 +772,7 @@ variable_access=
 expression=
 	expression.e1 TOKEN_PLUS expression.e2 {: return new NodeOp("PLUS",e1,e2); :}
 	| expression.e1 TOKEN_MINUS expression.e2 {: return new NodeOp("MINUS",e1,e2); :}
-	| expression.e1 TOKEN_TIMES expression.e2 {: return new NodeOp("TIMES",e1,e2); :}
+	| expression.e1 TOKEN_TIMES expression.e2 {: return new NodeOp("MUL",e1,e2); :}
 	| expression.e1 TOKEN_DIV expression.e2 {: return new NodeOp("DIV",e1,e2); :}
 	| TOKEN_MINUS expression.e @UNARY_MINUS {:
 		return new NodeOp("MINUS", e);
