@@ -1,7 +1,7 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
 import java.util.Iterator;
-
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 import ubordeaux.deptinfo.compilation.project.type.TypeFeature;
 import ubordeaux.deptinfo.compilation.project.type.TypeFunct;
 import ubordeaux.deptinfo.compilation.project.intermediateCode.Call;
@@ -96,7 +96,7 @@ public final class NodeCallFct extends NodeExp {
 		if (checksType()){
 			Name func_name = new Name(new LabelLocation(this.name));
 			ExpList args = new ExpList(null, null);
-			for (int i = this.size; i > 0; i--){
+			for (int i = this.size(); i > 0; i--){
 				NodeExp fils = (NodeExp) this.get(i-1);
 				fils.generateIntermediateCode();			
 				args.Add(fils.getExp());
