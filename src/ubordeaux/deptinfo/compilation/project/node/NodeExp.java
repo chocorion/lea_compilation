@@ -1,6 +1,7 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
 import ubordeaux.deptinfo.compilation.project.type.Type;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 
 public abstract class NodeExp extends Node {
 
