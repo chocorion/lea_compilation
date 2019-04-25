@@ -2,6 +2,7 @@ package ubordeaux.deptinfo.compilation.project.main;
 
 import beaver.Symbol;
 import beaver.Scanner;
+import java.lang.String;
 
 %%
 
@@ -88,7 +89,7 @@ Intager_hexa = 0x[0-9A-Fa-f]+
 //Token LITERALS
 {Integer}				   { System.out.print("[LIT_INTEGER	" + yytext() + "] "); return new Symbol(Terminals.TOKEN_LIT_INTEGER , yyline, yycolumn, (Integer)Integer.parseInt(yytext())); }
 {Intager_hexa} 			   { System.out.print("[LIT_INTEGER	" + yytext() + "] "); return new Symbol(Terminals.TOKEN_LIT_INTEGER , yyline, yycolumn, (Integer)Integer.parseInt((yytext().split("0x"))[1], 16)); }
-{String} 	        	   { System.out.print("[LIT_STRING	" + yytext() + "] "); return new Symbol(Terminals.TOKEN_LIT_STRING 	, yyline, yycolumn, yytext()); }
+{String} 	        	   { System.out.print("[LIT_STRING	" + yytext() + "] "); return new Symbol(Terminals.TOKEN_LIT_STRING 	, yyline, yycolumn, yytext().substring(1, yytext().length() - 1)); }
 "true" 	        		   { System.out.print("[TRUE] "); 	return new Symbol(Terminals.TOKEN_TRUE 		, yyline, yycolumn); }
 "false" 	        	   { System.out.print("[FALSE] "); 	return new Symbol(Terminals.TOKEN_FALSE 	, yyline, yycolumn); }
 "null" 	        		   { System.out.print("[NULL] "); 	return new Symbol(Terminals.TOKEN_NULL 		, yyline, yycolumn); }

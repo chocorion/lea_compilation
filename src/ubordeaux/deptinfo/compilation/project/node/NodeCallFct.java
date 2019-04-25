@@ -55,13 +55,20 @@ public final class NodeCallFct extends NodeExp {
 			
 			if (!paramType.equals(argType)) {
 				//System.out.println("IN NODE CALL FUNCTION -> " + (TypeFeature) argType.getType());
-				System.err.println("*** Erreur de typage " + argType + " != " + paramType);
+				//System.err.println("*** Erreur de typage " + argType + " != " + paramType);
 				result = false;
 				break;
 			}
 		}
 		// Plus ou moins d'arguments que de paramètres
 		if (result && (itArgs.hasNext() || itParams.hasNext())) {
+
+			if (itArgs.hasNext()) {
+				System.out.println("*** Argument en trop -> " + itArgs.next());
+			} else {
+				System.out.println("*** Argument en trop -> " + itParams.next());
+			}
+
 			System.err.println("*** Erreur de typage: pas le même nombre de paramètres ");
 			return false;
 		}

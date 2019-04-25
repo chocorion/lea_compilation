@@ -745,7 +745,9 @@ literal=
 	//TODO: Verifier la valeur et generer une erreur si elle est trop grande
 		return new NodeLiteral(new TypeInt((Integer)e.value), e.value);
 	:}
-	| TOKEN_LIT_STRING.e {: return new NodeLiteral(new TypeString(), (String)e.value); :}
+	| TOKEN_LIT_STRING.e {: 
+		return new NodeLiteral(new TypeString(), (String)e.value); 
+	:}
 	| TOKEN_TRUE  {: return new NodeLiteral(new TypeBoolean(), true); :}
 	| TOKEN_FALSE {: return new NodeLiteral(new TypeBoolean(), false);:}
 	| TOKEN_NULL  {: return new NodeLiteral(new TypePointer(), null); :}
