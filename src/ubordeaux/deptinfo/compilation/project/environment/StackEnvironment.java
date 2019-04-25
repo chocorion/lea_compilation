@@ -25,24 +25,16 @@ public class StackEnvironment {
     }
 
     public void pushLevel() {
-        System.out.println("STACK pushing level...");
-        
         this.stack.add(0, new HashMap<>());
         this.stackSize++;
-
-        System.out.println("STACK\t\tSize : " + this.stackSize);
     }
     
     public void popLevel() {
-        System.out.println("STACK poping level...");
-        
         this.stack.remove(0);
         this.stackSize--;
-        System.out.println("STACK\t\tSize : " + this.stackSize);
     }
     
     public void putVariable(String variable, Type type) {
-        System.out.println("STACK Pushing variable " + variable + " on level " + this.stackSize);
         stack.get(0).put(variable, type);
     }
     
@@ -56,7 +48,6 @@ public class StackEnvironment {
     }
     public Type getVariableType(String variable) {
         Type ret;
-        System.out.println("STACK Stack search : " + variable + " on level " + this.stackSize);
         for (int i = 0; i < stackSize; i++) {
             ret = stack.get(i).get(variable);
             if (ret != null) {
