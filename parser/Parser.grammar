@@ -267,8 +267,8 @@ subrange_type=
 	{:
 		//todo verification type
 		return new TypeArrayRange(
-				typeEnvironment.getVariableValue((String)i1.value),
-				typeEnvironment.getVariableValue((String)i2.value)
+				stackEnvironment.getVariableType((String)i1.value),
+				stackEnvironment.getVariableType((String)i2.value)
 		);
 	:}
 	;
@@ -342,13 +342,13 @@ variable_declaration=
 		while(it.hasNext()) {
 			String s = it.next();
 
-			//On regarde s'il n'est pas deja declare
-			if (typeEnvironment.getVariableValue(s) != null) {
+			//On regarde s'il n'est pas deja declare sur la pile courante
+			if (stackEnvironment.getVariableType(s, 0) != null) {
 				String error_message = s + " is already declared !";
 				semanticError(error_message, c);
 			} else {
 				declaration_list.add(new NodeId(s, t));
-				typeEnvironment.putVariable(s,t);
+				stackEnvironment.putVariable(s,t);
 			}
 
 		}
@@ -430,6 +430,8 @@ procedure_head=
 					((NodeId) args.get(x)).getType()
 				)
 			);
+
+			stackEnvironment.putVariable(((NodeId) args.get(x)).getName(), ((NodeId) args.get(x)).getType());
 		}
 	
 		TypeFunct t = new TypeFunct((String) id.value, types, new TypeVoid());
@@ -447,6 +449,8 @@ procedure_head=
 					((NodeId) args.get(x)).getType()
 				)
 			);
+			
+			stackEnvironment.putVariable(((NodeId) args.get(x)).getName(), ((NodeId) args.get(x)).getType());
 		}
 
 		TypeFunct type = new TypeFunct((String) id.value, types, t);
@@ -482,7 +486,8 @@ argt=
 
 	;
 
-block= 
+block=
+	addStackLevel
 	variable_declaration_part.e1
 	TOKEN_BEGIN
 	statement_list.e2
@@ -495,6 +500,7 @@ block=
 
 		l.add(e2);
 
+		stackEnvironment.popLevel();
 		return l;
 	:}
 	;
@@ -718,7 +724,7 @@ case_default=
 variable_access=
 	TOKEN_IDENTIFIER.e {:
 			//Le prendre dans le stackenvironment, sinon dans type...
-			return new NodeId((String)e.value, typeEnvironment.getVariableValue((String)e.value));
+			return new NodeId((String)e.value, stackEnvironment.getVariableType((String)e.value));
 	:}
 	| variable_access.t TOKEN_LBRACKET expression.e TOKEN_RBRACKET
 	{:
