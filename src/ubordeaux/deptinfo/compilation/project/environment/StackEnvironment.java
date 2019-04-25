@@ -1,42 +1,71 @@
 package ubordeaux.deptinfo.compilation.project.environment;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
+import ubordeaux.deptinfo.compilation.project.type.*;
 
 /**
  * Implementation of an emulated environment with variables
  *
  * @author Lionel CLÉMENT
  */
-public class StackEnvironment extends Environment {
+public class StackEnvironment {
 
     private String name;
-    private Stack<Double> stack;
+    private ArrayList<HashMap<String, Type>> stack;
+    private int stackSize;
 
     public StackEnvironment(String name) {
         this.name = name;
-        this.stack = new Stack<>();
+        this.stackSize = 0;
+        this.stack = new ArrayList<>();
     }
 
     public StackEnvironment() {
         this("default");
     }
 
-    @Override
-    public void putVariable(String variable, String value) {
-    }
+    public void pushLevel() {
+        System.out.println("STACK pushing level...");
+        
+        this.stack.add(0, new HashMap<>());
+        this.stackSize++;
 
-    public void putVariable(String variable, Double value) {
-        stack.push(value);
+        System.out.println("STACK\t\tSize : " + this.stackSize);
     }
-
-    public Double getValueAt(int index) throws IndexOutOfBoundsException {
-        // Allows to get a value in the stack (without popping, at a distance
-        // relative to the head)
-        int target = stack.size()-index-1;
-        if(target <0) throw new IndexOutOfBoundsException("Reached end of stack");
-        return stack.get(target);
+    
+    public void popLevel() {
+        System.out.println("STACK poping level...");
+        
+        this.stack.remove(0);
+        this.stackSize--;
+        System.out.println("STACK\t\tSize : " + this.stackSize);
     }
-
+    
+    public void putVariable(String variable, Type type) {
+        System.out.println("STACK Pushing variable " + variable + " on level " + this.stackSize);
+        stack.get(0).put(variable, type);
+    }
+    
+    
+    public Type getVariableType(String variable, int index) {
+        if (index > stackSize) {
+            return null;
+        }
+        
+        return stack.get(index).get(variable);
+    }
+    public Type getVariableType(String variable) {
+        Type ret;
+        System.out.println("STACK Stack search : " + variable + " on level " + this.stackSize);
+        for (int i = 0; i < stackSize; i++) {
+            ret = stack.get(i).get(variable);
+            if (ret != null) {
+                System.out.println("STACK Find ! " + ret);
+                return ret;
+            }
+        }
+        
+        System.out.println("STACK Not Find...");
+        return null;
+    }
 }

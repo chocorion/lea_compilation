@@ -144,7 +144,11 @@
 *
 ***/
 
+addStackLevel=
+{:	stackEnvironment.pushLevel(); return new Symbol(0); :};
+
 program=
+	addStackLevel
 	type_declaration_part.p1
 	variable_declaration_part.p2
 	procedure_definition_part.p3
@@ -164,7 +168,7 @@ program=
 		if(p4 != null) {
 			p.add(p4);
 		}
-
+	stackEnvironment.popLevel();
 		return p;
 	:}
 	;
@@ -189,19 +193,7 @@ type_declaration_list=
 type_declaration=
 	TOKEN_IDENTIFIER.i TOKEN_AFF type.t TOKEN_SEMIC
 	{:
-
-	//		System.out.println("GRAMMAR -> We are in type_declaration !");
-	//
-	//		//On regard s'il est pas deja declare
-	//		if (typeEnvironment.getVariableValue((String)i.value) != null) {
-	//			String error_message = (String)i.value + "is already declared !";
-	//			semanticError(error_message, i);
-	//			
-	//		} else {
-	//			typeEnvironment.putVariable((String)i.value, t);
-	//		}
-
-		//verification type
+		typeEnvironment.putVariable((String)i.value, t);
 		return new NodeId((String)i.value, t);
 	:}
 	;
@@ -245,15 +237,22 @@ enumerated_type=
 
 		Iterator<String> it = l.iterator();
 		int cpt = 0;
+
+		String tmp;
+		tmp = it.next();
 		enumRange.setFirst(
-			new TypeItemEnum(cpt, it.next())
+			new TypeItemEnum(cpt, tmp)
 		);
+
+		typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, tmp));
+
 		cpt++;
 		String last = "";
 
 		while(it.hasNext()) {
-			last = it.next();
+			tmp = it.next();
 			cpt++;
+			typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, tmp));
 		}
 
 		enumRange.setLast(
@@ -272,13 +271,30 @@ subrange_type=
 	{:
 		return new TypeArrayRange(new TypeInt(), new TypeInt());
 	:}
-	| TOKEN_IDENTIFIER.i1 TOKEN_DOTDOT TOKEN_IDENTIFIER.i2
+	| TOKEN_IDENTIFIER.i1 TOKEN_DOTDOT.t TOKEN_IDENTIFIER.i2
 	{:
+		if (stackEnvironment.getVariableType((String)i1.value) == null || 
+			stackEnvironment.getVariableType((String)i2.value) == null) {
+			
+			if (typeEnvironment.getVariableValue((String)i1.value) == null || 
+				typeEnvironment.getVariableValue((String)i2.value) == null) {
+					semanticError("One of subrange_type value is null.", t);
+
+					return new Symbol(0);
+			} else {
+				return new TypeArrayRange(
+					typeEnvironment.getVariableValue((String)i1.value),
+					typeEnvironment.getVariableValue((String)i2.value)
+			);
+			}
+		} else {
+			return new TypeArrayRange(
+					stackEnvironment.getVariableType((String)i1.value),
+					stackEnvironment.getVariableType((String)i2.value)
+			);
+		}
+
 		//todo verification type
-		return new TypeArrayRange(
-				typeEnvironment.getVariableValue((String)i1.value),
-				typeEnvironment.getVariableValue((String)i2.value)
-		);
 	:}
 	;
 
@@ -351,13 +367,13 @@ variable_declaration=
 		while(it.hasNext()) {
 			String s = it.next();
 
-			//On regarde s'il n'est pas deja declare
-			if (typeEnvironment.getVariableValue(s) != null) {
+			//On regarde s'il n'est pas deja declare sur la pile courante
+			if (stackEnvironment.getVariableType(s, 0) != null) {
 				String error_message = s + " is already declared !";
 				semanticError(error_message, c);
 			} else {
 				declaration_list.add(new NodeId(s, t));
-				typeEnvironment.putVariable(s,t);
+				stackEnvironment.putVariable(s,t);
 			}
 
 		}
@@ -430,7 +446,6 @@ procedure_declaration_head=
 procedure_head=
 	TOKEN_PROCEDURE TOKEN_IDENTIFIER.id TOKEN_LPAR argt_part.args TOKEN_RPAR
 	{:
-	//Les parametres ne sont pas bon ! TODO
 
 		TypeTuple types = new TypeTuple();
 		for(int x = 0; x < args.size(); x++) {
@@ -440,6 +455,8 @@ procedure_head=
 					((NodeId) args.get(x)).getType()
 				)
 			);
+
+			stackEnvironment.putVariable(((NodeId) args.get(x)).getName(), ((NodeId) args.get(x)).getType());
 		}
 	
 		TypeFunct t = new TypeFunct((String) id.value, types, new TypeVoid());
@@ -457,6 +474,8 @@ procedure_head=
 					((NodeId) args.get(x)).getType()
 				)
 			);
+			
+			stackEnvironment.putVariable(((NodeId) args.get(x)).getName(), ((NodeId) args.get(x)).getType());
 		}
 
 		TypeFunct type = new TypeFunct((String) id.value, types, t);
@@ -492,7 +511,8 @@ argt=
 
 	;
 
-block= 
+block=
+	addStackLevel
 	variable_declaration_part.e1
 	TOKEN_BEGIN
 	statement_list.e2
@@ -505,6 +525,7 @@ block=
 
 		l.add(e2);
 
+		stackEnvironment.popLevel();
 		return l;
 	:}
 	;
@@ -727,7 +748,16 @@ case_default=
 
 variable_access=
 	TOKEN_IDENTIFIER.e {:
-			return new NodeId((String)e.value, typeEnvironment.getVariableValue((String)e.value));
+			if (stackEnvironment.getVariableType((String)e.value) == null) {
+				if (typeEnvironment.getVariableValue((String)e.value) == null) {
+					semanticError("Error in variable access, can't find identifier.", e);
+					return new Symbol(0);
+				} else {
+					return new NodeId((String)e.value, typeEnvironment.getVariableValue((String)e.value));
+				}
+			} else {
+				return new NodeId((String)e.value, stackEnvironment.getVariableType((String)e.value));
+			}
 	:}
 	| variable_access.t TOKEN_LBRACKET expression.e TOKEN_RBRACKET
 	{:
@@ -747,17 +777,28 @@ expression=
 	| TOKEN_MINUS expression.e @UNARY_MINUS {:
 		return new NodeOp("MINUS", e);
 	:}
-	| expression.e1 TOKEN_OR expression.e2 {: return new NodeRel("OR", e1, e2); :}
-	| expression.e1 TOKEN_AND expression.e2 {: return new NodeRel("AND", e1, e2); :}
+	| expression.e1 TOKEN_OR expression.e2 {:
+		return new NodeRel("OR", e1, e2);
+	:}
+	| expression.e1 TOKEN_AND expression.e2 {: 
+		return new NodeRel("AND", e1, e2);
+	:}
 	| TOKEN_NOT expression.e {:
 		return new NodeRel("EQ", e,new NodeLiteral(new TypeBoolean(), false));
 	:}
-	| expression.e1 TOKEN_LT expression.e2 {: return new NodeRel("LT", e1, e2); :}
-	| expression.e1 TOKEN_LE expression.e2 {: return new NodeRel("LE", e1, e2); :}
-	| expression.e1 TOKEN_GT expression.e2 {: return new NodeRel("GT",e1,e2); :}
-	| expression.e1 TOKEN_GE expression.e2 {: return new NodeRel("GE",e1,e2); :}
+	| expression.e1 TOKEN_LT expression.e2 {: 
+		return new NodeRel("LT", e1, e2);
+	:}
+	| expression.e1 TOKEN_LE expression.e2 {: 
+		return new NodeRel("LE", e1, e2);
+	:}
+	| expression.e1 TOKEN_GT expression.e2 {: 
+		return new NodeRel("GT",e1,e2);
+	:}
+	| expression.e1 TOKEN_GE expression.e2 {: 
+		return new NodeRel("GE",e1,e2);
+	:}
 	| expression.e1 TOKEN_EQ expression.e2 {:
-		//Est-ce que le nom est le bon ?
 		return new NodeRel("EQ", e1, e2);
 	:}
 	| expression.e1 TOKEN_NE expression.e2 {: return new NodeRel("NE",e1,e2); :}
