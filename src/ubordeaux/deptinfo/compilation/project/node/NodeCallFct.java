@@ -51,7 +51,10 @@ public final class NodeCallFct extends NodeExp {
 			Type argType = arg.getType();
 			// chaque paramètre est une feature nom : type
 			Type paramType = ((TypeFeature) itParams.next()).getType();
+
+			
 			if (!paramType.equals(argType)) {
+				//System.out.println("IN NODE CALL FUNCTION -> " + (TypeFeature) argType.getType());
 				System.err.println("*** Erreur de typage " + argType + " != " + paramType);
 				result = false;
 				break;

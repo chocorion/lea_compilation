@@ -429,6 +429,18 @@ procedure_declaration_head=
 procedure_head=
 	TOKEN_PROCEDURE TOKEN_IDENTIFIER.id TOKEN_LPAR argt_part.args TOKEN_RPAR
 	{:
+	//Les parametres ne sont pas bon ! TODO
+
+		TypeTuple types = new TypeTuple();
+		for(int x = 0; x < args.size(); x++) {
+			types.add(
+				new TypeFeature(
+					((NodeId) args.get(x)).getName(),
+					((NodeId) args.get(x)).getType()
+				)
+			);
+		}
+	
 		TypeFunct t = new TypeFunct((String) id.value, new TypeTuple(), new TypeVoid());
 		procedureEnvironment.putVariable((String) id.value, t);
 		
@@ -438,7 +450,12 @@ procedure_head=
 	{:
 		TypeTuple types = new TypeTuple();
 		for(int x = 0; x < args.size(); x++) {
-			types.add(((NodeId) args.get(x)).getType());
+			types.add(
+				new TypeFeature(
+					((NodeId) args.get(x)).getName(),
+					((NodeId) args.get(x)).getType()
+				)
+			);
 		}
 
 		TypeFunct type = new TypeFunct((String) id.value, types, t);
@@ -469,8 +486,7 @@ argt_list=
 argt=
 	TOKEN_IDENTIFIER.name TOKEN_COLON type.t
 	{:
-		//Mettre a jour l'environment qui nous permet d'enregistrer les types
-		return new NodeId((String) name.value, new TypeFeature((String) name.value, t));
+		return new NodeId((String) name.value, t);
 	:}
 
 	;
@@ -546,7 +562,7 @@ assignment_statement=
 	;
 
 procedure_statement=
-	procedure_expression.e TOKEN_SEMIC{:	//Je ne sais pas trop a quoi cela correspond
+	procedure_expression.e TOKEN_SEMIC{:
 		return e;
 	:}
 	;
@@ -555,7 +571,7 @@ procedure_expression=
 	TOKEN_IDENTIFIER.name TOKEN_LPAR expression_part.e TOKEN_RPAR {:
 		String n = (String) name.value;
 		TypeFunct type = (TypeFunct) procedureEnvironment.getVariableValue(n);
-
+		
 		return new NodeCallFct(n, type, e);
 	:}
 	;
