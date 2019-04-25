@@ -16,4 +16,9 @@ public class ExpList implements IntermediateCode {
 		System.err.println("TODO: " + this.getClass().getSimpleName() + ".canonicalTransformation()()");
 	}
 
+	public void Add (Exp elt) {
+		this.tail = new ExpList(this.head, this.tail); 
+		this.head = elt;
+	}
+
 }

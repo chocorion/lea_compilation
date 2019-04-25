@@ -5,6 +5,7 @@ import ubordeaux.deptinfo.compilation.project.type.Type;
 public abstract class NodeExp extends Node {
 
 	protected Type type;
+	protected Exp exp;
 
 	public NodeExp(Node... abstTrees) {
 		super(abstTrees);
@@ -16,6 +17,10 @@ public abstract class NodeExp extends Node {
 
 	public void setType(Type t) {
 		this.type = t;
+	}
+
+	public Exp getExp() {
+		return this.exp;
 	}
 
 }

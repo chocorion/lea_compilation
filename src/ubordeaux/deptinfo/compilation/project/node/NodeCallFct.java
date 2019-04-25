@@ -4,6 +4,9 @@ import java.util.Iterator;
 
 import ubordeaux.deptinfo.compilation.project.type.TypeFeature;
 import ubordeaux.deptinfo.compilation.project.type.TypeFunct;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.Call;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.ExpList;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.LabelLocation;
 import ubordeaux.deptinfo.compilation.project.type.Type;
 
 public final class NodeCallFct extends NodeExp {
@@ -95,6 +98,22 @@ public final class NodeCallFct extends NodeExp {
 		return "NodeCallFct " + name + "()";
 	}
 
-
+	public void generateIntermediateCode() {
+		
+		if (checksType()){
+			Name func_name = new Name(new LabelLocation(this.name));
+			ExpList args = new ExpList(null, null);
+			for (int i = this.size; i > 0; i--){
+				NodeExp fils = (NodeExp) this.get(i-1);
+				fils.generateIntermediateCode();			
+				args.Add(fils.getExp());
+			}
+			Call call = new Call(func_name, args);
+			super.exp = call;
+		}
+		
+	}
 
 }
+
+
