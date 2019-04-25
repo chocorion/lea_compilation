@@ -193,6 +193,7 @@ type_declaration_list=
 type_declaration=
 	TOKEN_IDENTIFIER.i TOKEN_AFF type.t TOKEN_SEMIC
 	{:
+		typeEnvironment.putVariable((String)i.value, t);
 		return new NodeId((String)i.value, t);
 	:}
 	;
@@ -236,15 +237,22 @@ enumerated_type=
 
 		Iterator<String> it = l.iterator();
 		int cpt = 0;
+
+		String tmp;
+		tmp = it.next();
 		enumRange.setFirst(
-			new TypeItemEnum(cpt, it.next())
+			new TypeItemEnum(cpt, tmp)
 		);
+
+		typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, tmp));
+
 		cpt++;
 		String last = "";
 
 		while(it.hasNext()) {
-			last = it.next();
+			tmp = it.next();
 			cpt++;
+			typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, tmp));
 		}
 
 		enumRange.setLast(
@@ -263,13 +271,30 @@ subrange_type=
 	{:
 		return new TypeArrayRange(new TypeInt(), new TypeInt());
 	:}
-	| TOKEN_IDENTIFIER.i1 TOKEN_DOTDOT TOKEN_IDENTIFIER.i2
+	| TOKEN_IDENTIFIER.i1 TOKEN_DOTDOT.t TOKEN_IDENTIFIER.i2
 	{:
+		if (stackEnvironment.getVariableType((String)i1.value) == null || 
+			stackEnvironment.getVariableType((String)i2.value) == null) {
+			
+			if (typeEnvironment.getVariableValue((String)i1.value) == null || 
+				typeEnvironment.getVariableValue((String)i2.value) == null) {
+					semanticError("One of subrange_type value is null.", t);
+
+					return new Symbol(0);
+			} else {
+				return new TypeArrayRange(
+					typeEnvironment.getVariableValue((String)i1.value),
+					typeEnvironment.getVariableValue((String)i2.value)
+			);
+			}
+		} else {
+			return new TypeArrayRange(
+					stackEnvironment.getVariableType((String)i1.value),
+					stackEnvironment.getVariableType((String)i2.value)
+			);
+		}
+
 		//todo verification type
-		return new TypeArrayRange(
-				stackEnvironment.getVariableType((String)i1.value),
-				stackEnvironment.getVariableType((String)i2.value)
-		);
 	:}
 	;
 
@@ -723,8 +748,16 @@ case_default=
 
 variable_access=
 	TOKEN_IDENTIFIER.e {:
-			//Le prendre dans le stackenvironment, sinon dans type...
-			return new NodeId((String)e.value, stackEnvironment.getVariableType((String)e.value));
+			if (stackEnvironment.getVariableType((String)e.value) == null) {
+				if (typeEnvironment.getVariableValue((String)e.value) == null) {
+					semanticError("Error in variable access, can't find identifier.", e);
+					return new Symbol(0);
+				} else {
+					return new NodeId((String)e.value, typeEnvironment.getVariableValue((String)e.value));
+				}
+			} else {
+				return new NodeId((String)e.value, stackEnvironment.getVariableType((String)e.value));
+			}
 	:}
 	| variable_access.t TOKEN_LBRACKET expression.e TOKEN_RBRACKET
 	{:
