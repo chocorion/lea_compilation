@@ -18,8 +18,10 @@ public class NodeRel extends NodeExp {
 	@Override
 	public boolean checksType() {
 		super.checksType();
-		if ((!(this.getOp1().getType() instanceof TypeInt)) || (!(this.getOp2().getType() instanceof TypeInt)))
+		if ((!(this.getOp1().getType() instanceof TypeInt)) || (!(this.getOp2().getType() instanceof TypeInt))){
+			System.out.println("Erreur de typage dans NodeRel !");
 			return false;
+		}
 		return true;
 	}
 

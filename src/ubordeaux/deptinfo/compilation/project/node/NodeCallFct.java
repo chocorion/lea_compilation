@@ -59,18 +59,11 @@ public final class NodeCallFct extends NodeExp {
 				result = false;
 				break;
 			}
-			System.out.println("GRAMMAR ArgType -> " + argType);
-			System.out.println("GRAMMAR paramType -> " + paramType);
+			//System.out.println("GRAMMAR ArgType -> " + argType);
+			//System.out.println("GRAMMAR paramType -> " + paramType);
 		}
 		// Plus ou moins d'arguments que de paramètres
 		if (result && (itArgs.hasNext() || itParams.hasNext())) {
-
-			if (itArgs.hasNext()) {
-				System.out.println("GRAMMAR Argument en trop -> " + itArgs.next());
-			} else {
-				System.out.println("GRAMMAR Argument en trop -> " + itParams.next());
-			}
-
 			System.err.println("*** Erreur de typage: pas le même nombre de paramètres ");
 			return false;
 		}
