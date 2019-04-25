@@ -309,6 +309,7 @@ structure_type=
 feature_list_type=
 	feature_list_type.e feature_type.f {:
 		//Penser a verifier les types plus tard
+		e.add(f);
 		return e;
 	:}
 	| feature_type.e {:
@@ -461,10 +462,7 @@ argt_list=
 		return l;
 	:}
 	| argt.e {:
-		NodeList l = new NodeList();
-		l.add(e);
-
-		return l;
+		return new NodeList(e);
 	:}
 	;
 
@@ -472,7 +470,7 @@ argt=
 	TOKEN_IDENTIFIER.name TOKEN_COLON type.t
 	{:
 		//Mettre a jour l'environment qui nous permet d'enregistrer les types
-		return new NodeId((String) name.value, t);
+		return new NodeId((String) name.value, new TypeFeature((String) name.value, t));
 	:}
 
 	;
