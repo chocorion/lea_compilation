@@ -38,7 +38,7 @@
 // KEYWORDS
 %terminals TOKEN_TYPE, TOKEN_STRING, TOKEN_INTEGER, TOKEN_BOOLEAN, TOKEN_ARRAY, TOKEN_OF, TOKEN_STRUCT;
 %terminals TOKEN_VAR, TOKEN_PROCEDURE, TOKEN_FUNCTION, TOKEN_BEGIN, TOKEN_END, TOKEN_NEW, TOKEN_DISPOSE;
-%terminals TOKEN_PRINTLN, TOKEN_READLN, TOKEN_RETURN, TOKEN_IF, TOKEN_THEN, TOKEN_ELSE, TOKEN_WHILE, TOKEN_DO;
+%terminals TOKEN_PRINTLN, TOKEN_PRINT, TOKEN_READLN, TOKEN_RETURN, TOKEN_IF, TOKEN_THEN, TOKEN_ELSE, TOKEN_WHILE, TOKEN_DO;
 %terminals TOKEN_SWITCH, TOKEN_CASE, TOKEN_DEFAULT;
 
 // PONCTS
@@ -80,8 +80,9 @@
 %typeof statement="Node";
 %typeof switch_statement="NodeSwitch";
 %typeof structured_statement="Node";
-%typeof println_statement="NodeExp";
-%typeof readln_statement="NodeExp";
+%typeof println_statement="NodeCallFct";
+%typeof print_statement="NodeCallFct";
+%typeof readln_statement="NodeCallFct";
 %typeof new_statement="NodeNew";
 %typeof expression_part="NodeList";
 %typeof simple_statement="Node"; //Maybe
@@ -441,7 +442,7 @@ procedure_head=
 			);
 		}
 	
-		TypeFunct t = new TypeFunct((String) id.value, new TypeTuple(), new TypeVoid());
+		TypeFunct t = new TypeFunct((String) id.value, types, new TypeVoid());
 		procedureEnvironment.putVariable((String) id.value, t);
 		
 		return new NodeCallFct((String) id.value, t, args);
@@ -546,6 +547,9 @@ simple_statement=
 	| println_statement.e {:
 		return e;
 	:}
+	| print_statement.e {:
+		return e;
+	:}
 	| readln_statement.e {:
 		return e;
 	:}
@@ -610,15 +614,43 @@ dispose_statement=
 
 println_statement=
 	TOKEN_PRINTLN expression.e TOKEN_SEMIC {:
-		//Je ne suis pas sure de tout de ce qu'il faut renvoyer...
-		return e;
+		return new NodeCallFct(
+			"prinln",
+			new TypeFunct(
+				"println",
+				new TypeTuple(new TypeFeature("print_arg", e.getType())),
+				new TypeVoid()
+			),
+			new NodeList(e)
+		);
+	:}
+	;
+
+print_statement=
+	TOKEN_PRINT expression.e TOKEN_SEMIC {:
+		return new NodeCallFct(
+			"print",
+			new TypeFunct(
+				"print",
+				new TypeTuple(new TypeFeature("print_arg", e.getType())),
+				new TypeVoid()
+			),
+			new NodeList(e)
+		);
 	:}
 	;
 
 readln_statement=
 	TOKEN_READLN expression.e TOKEN_SEMIC {:
-		//Je ne suis pas sure non plus pour celui-ci
-		return e;
+		return new NodeCallFct(
+			"readl",
+			new TypeFunct(
+				"readlln",
+				new TypeTuple(new TypeFeature("read_arg", e.getType())),
+				new TypeString()
+			),
+			new NodeList(e)
+		);
 	:}
 	;
 

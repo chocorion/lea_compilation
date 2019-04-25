@@ -46,6 +46,7 @@ Intager_hexa = 0x[0-9A-Fa-f]+
 "new"	 	    { System.out.print("[NEW] "); 		return new Symbol(Terminals.TOKEN_NEW			, yyline, yycolumn); }
 "dispose"	 	{ System.out.print("[DISPOSE] "); 	return new Symbol(Terminals.TOKEN_DISPOSE		, yyline, yycolumn); }
 "println"	 	{ System.out.print("[PRINTLN] "); 	return new Symbol(Terminals.TOKEN_PRINTLN		, yyline, yycolumn); }
+"print"		 	{ System.out.print("[PRINT] "); 	return new Symbol(Terminals.TOKEN_PRINT			, yyline, yycolumn); }
 "readln"	 	{ System.out.print("[READLN ] "); 	return new Symbol(Terminals.TOKEN_READLN		, yyline, yycolumn); }
 "return"	 	{ System.out.print("[RETURN] "); 	return new Symbol(Terminals.TOKEN_RETURN		, yyline, yycolumn); }
 "if"	 	    { System.out.print("[IF] "); 		return new Symbol(Terminals.TOKEN_IF			, yyline, yycolumn); }
