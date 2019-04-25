@@ -273,9 +273,10 @@ subrange_type=
 	:}
 	| TOKEN_IDENTIFIER.i1 TOKEN_DOTDOT TOKEN_IDENTIFIER.i2
 	{:
+		//todo verification type
 		return new TypeArrayRange(
-				new TypeInt(),
-				new TypeInt()
+				typeEnvironment.getVariableValue((String)i1.value),
+				typeEnvironment.getVariableValue((String)i2.value)
 		);
 	:}
 	;
@@ -430,7 +431,7 @@ procedure_head=
 		TypeFunct t = new TypeFunct((String) id.value, new TypeTuple(), new TypeVoid());
 		procedureEnvironment.putVariable((String) id.value, t);
 		
-		return new NodeCallFct((String) id.value,t);
+		return new NodeCallFct((String) id.value, t, args);
 	:}
 	| TOKEN_FUNCTION TOKEN_IDENTIFIER.id TOKEN_LPAR argt_part.args TOKEN_RPAR TOKEN_COLON type.t
 	{:
@@ -442,7 +443,7 @@ procedure_head=
 		TypeFunct type = new TypeFunct((String) id.value, types, t);
 		procedureEnvironment.putVariable((String) id.value, type);
 		
-		return new NodeCallFct((String) id.value, type);
+		return new NodeCallFct((String) id.value, type, args);
 	:}
 	;
 
