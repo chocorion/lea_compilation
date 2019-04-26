@@ -26,7 +26,7 @@ public class Main {
                     }
                     System.err.println("*** Analyse syntaxique ok");
                     System.out.println(result);
-                    result.toDot("coucou.dot");
+                    result.toDot("dot.dot");
 
                     System.out.println("Checking type : " + checksType);
 

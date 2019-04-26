@@ -29,7 +29,6 @@
 	private StackEnvironment stackEnvironment = new StackEnvironment("local variables stack");
 	private String type_declaration_name;
 
-	private int refEnum = 0;
 
 :};
 
@@ -243,8 +242,6 @@ index_type =
 enumerated_type=
 	init_enumerated_type TOKEN_LPAR identifier_list.l TOKEN_RPAR
 	{:
-		String refValue = String.valueOf(refEnum);
-
 		TypeEnumRange enumRange = new TypeEnumRange();
 
 		Iterator<String> it = l.iterator();
@@ -255,20 +252,19 @@ enumerated_type=
 		enumRange.setFirst(
 			new TypeItemEnum(cpt, tmp)
 		);
-		typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, refValue));
+		typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, enumRange.getName()));
 		cpt++;
 
 		while(it.hasNext()) {
 			tmp = it.next();
 			cpt++;
-			typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, refValue));
+			typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, enumRange.getName()));
 		}
 
 		enumRange.setLast(
 			new TypeItemEnum(cpt, tmp)
 		);
 
-		refEnum++;
 		return enumRange;
 	:}
 	;
