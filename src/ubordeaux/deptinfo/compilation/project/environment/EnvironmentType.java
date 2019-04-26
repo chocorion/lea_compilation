@@ -9,7 +9,7 @@ import ubordeaux.deptinfo.compilation.project.type.*;
  *
  * @author Adrien Boitelle
  */
-public class EnvironmentType {
+public class EnvironmentType implements EnvironmentInt {
 
     private String name;
     private Map<String, Type> table;

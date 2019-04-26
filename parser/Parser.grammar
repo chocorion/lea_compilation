@@ -275,8 +275,8 @@ subrange_type=
 	:}
 	| TOKEN_IDENTIFIER.i1 TOKEN_DOTDOT.t TOKEN_IDENTIFIER.i2
 	{:
-		if (stackEnvironment.getVariableType((String)i1.value) == null || 
-			stackEnvironment.getVariableType((String)i2.value) == null) {
+		if (stackEnvironment.getVariableValue((String)i1.value) == null || 
+			stackEnvironment.getVariableValue((String)i2.value) == null) {
 			
 			if (typeEnvironment.getVariableValue((String)i1.value) == null || 
 				typeEnvironment.getVariableValue((String)i2.value) == null) {
@@ -291,8 +291,8 @@ subrange_type=
 			}
 		} else {
 			return new TypeArrayRange(
-					stackEnvironment.getVariableType((String)i1.value),
-					stackEnvironment.getVariableType((String)i2.value)
+					stackEnvironment.getVariableValue((String)i1.value),
+					stackEnvironment.getVariableValue((String)i2.value)
 			);
 		}
 
@@ -327,7 +327,6 @@ structure_type=
 
 feature_list_type=
 	feature_list_type.e feature_type.f {:
-		//Penser a verifier les types plus tard
 		e.add(f);
 		return e;
 	:}
@@ -370,7 +369,7 @@ variable_declaration=
 			String s = it.next();
 
 			//On regarde s'il n'est pas deja declare sur la pile courante
-			if (stackEnvironment.getVariableType(s, 0) != null) {
+			if (stackEnvironment.getVariableValue(s, 0) != null) {
 				String error_message = s + " is already declared !";
 				semanticError(error_message, c);
 			} else {
@@ -750,7 +749,7 @@ case_default=
 
 variable_access=
 	TOKEN_IDENTIFIER.e {:
-			if (stackEnvironment.getVariableType((String)e.value) == null) {
+			if (stackEnvironment.getVariableValue((String)e.value) == null) {
 				if (typeEnvironment.getVariableValue((String)e.value) == null) {
 					semanticError("Error in variable access, can't find identifier.", e);
 					return new Symbol(0);
@@ -758,7 +757,7 @@ variable_access=
 					return new NodeId((String)e.value, typeEnvironment.getVariableValue((String)e.value));
 				}
 			} else {
-				return new NodeId((String)e.value, stackEnvironment.getVariableType((String)e.value));
+				return new NodeId((String)e.value, stackEnvironment.getVariableValue((String)e.value));
 			}
 	:}
 	| variable_access.t TOKEN_LBRACKET expression.e TOKEN_RBRACKET

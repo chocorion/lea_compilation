@@ -8,7 +8,7 @@ import ubordeaux.deptinfo.compilation.project.type.*;
  *
  * @author Lionel CLÉMENT
  */
-public class StackEnvironment {
+public class StackEnvironment implements EnvironmentInt {
 
     private String name;
     private ArrayList<HashMap<String, Type>> stack;
@@ -39,14 +39,14 @@ public class StackEnvironment {
     }
     
     
-    public Type getVariableType(String variable, int index) {
+    public Type getVariableValue(String variable, int index) {
         if (index > stackSize) {
             return null;
         }
         
         return stack.get(index).get(variable);
     }
-    public Type getVariableType(String variable) {
+    public Type getVariableValue(String variable) {
         Type ret;
         for (int i = 0; i < stackSize; i++) {
             ret = stack.get(i).get(variable);
