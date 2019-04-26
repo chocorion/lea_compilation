@@ -1,4 +1,9 @@
-#/bin/sh
+#/bin/bash
 clear;
 ant clean;
-ant all && cat data/output;
+
+if [ -z $1 ]; then
+    ant all && cat data/output;
+elif [ $1 = 9 ]; then
+    ant nine && cat data/output;
+fi
