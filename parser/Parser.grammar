@@ -283,6 +283,7 @@ subrange_type=
 	:}
 	| TOKEN_IDENTIFIER.i1 TOKEN_DOTDOT.t TOKEN_IDENTIFIER.i2
 	{:
+
 		if (stackEnvironment.getVariableValue((String)i1.value) == null || 
 			stackEnvironment.getVariableValue((String)i2.value) == null) {
 			
@@ -295,16 +296,18 @@ subrange_type=
 				
 				Type typeFirstIdentifier = typeEnvironment.getVariableValue((String)i1.value);
 				Type typeSecondIdentifier = typeEnvironment.getVariableValue((String)i2.value);
-				
-				System.out.println("GRAMMAR -> " + typeFirstIdentifier);
-				System.out.println("GRAMMAR -> " + typeSecondIdentifier);
+
 
 				if (typeFirstIdentifier instanceof TypeItemEnum) {
 					if (!(typeSecondIdentifier instanceof TypeItemEnum)) {
 						semanticError("Error in subrange type, type are not the same.", i2);
-						System.exit(0);
+						System.exit(-1);
 					}
-					System.out.println("GRAMMAR -> subrange_type, instance of typeEnumRange !");
+
+					if (((TypeItemEnum)typeFirstIdentifier).getConst_value() > ((TypeItemEnum)typeSecondIdentifier).getConst_value()) {
+						semanticError("Error in subrange type, first value must be > than the second one !", i1);
+						System.exit(-1);
+					}
 
 					return new TypeEnumRange((TypeItemEnum)typeFirstIdentifier, (TypeItemEnum)typeSecondIdentifier);
 				}
