@@ -22,4 +22,6 @@ elif [ $1 = 8 ]; then
     ant eight && cat data/output;
 elif [ $1 = 9 ]; then
     ant nine && cat data/output;
+elif [ $1 = "test" ]; then
+    ant test && cat data/output;
 fi

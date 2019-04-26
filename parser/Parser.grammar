@@ -292,6 +292,8 @@ subrange_type=
 
 					return new Symbol(0);
 			} else {
+				System.out.println("GRAMMAR -> " + typeEnvironment.getVariableValue((String)i1.value));
+				System.out.println("GRAMMAR -> " + typeEnvironment.getVariableValue((String)i2.value));
 				return new TypeArrayRange(
 					typeEnvironment.getVariableValue((String)i1.value),
 					typeEnvironment.getVariableValue((String)i2.value)

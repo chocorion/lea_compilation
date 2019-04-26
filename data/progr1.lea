@@ -1,6 +1,5 @@
 var
 a: integer;
-a: string;
 
 begin
 a = 100;
