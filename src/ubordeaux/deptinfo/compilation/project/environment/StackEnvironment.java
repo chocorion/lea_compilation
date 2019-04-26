@@ -51,12 +51,10 @@ public class StackEnvironment implements EnvironmentInt {
         for (int i = 0; i < stackSize; i++) {
             ret = stack.get(i).get(variable);
             if (ret != null) {
-                System.out.println("STACK Find ! " + ret);
                 return ret;
             }
         }
         
-        System.out.println("STACK Not Find...");
         return null;
     }
 }

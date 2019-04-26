@@ -193,6 +193,7 @@ type_declaration_list=
 type_declaration=
 	TOKEN_IDENTIFIER.i TOKEN_AFF type.t TOKEN_SEMIC
 	{:
+		
 		typeEnvironment.putVariable((String)i.value, t);
 		return new NodeId((String)i.value, t);
 	:}
@@ -221,6 +222,13 @@ simple_type=
 
 named_type=
 	TOKEN_IDENTIFIER.e {:
+		//Doit etre un type existent.
+		String typeName = (String)e.value;
+
+		if (typeEnvironment.getVariableValue(typeName) == null) {
+			semanticError("Type error, unknow type :" + typeName, e);
+			System.exit(-1);
+		}
 		return new TypeNamed((String)e.value);
 	:}
 	;
