@@ -29,6 +29,8 @@
 	private StackEnvironment stackEnvironment = new StackEnvironment("local variables stack");
 	private String type_declaration_name;
 
+	private int refEnum = 0;
+
 :};
 
 %init {:
@@ -114,7 +116,7 @@
 %typeof pointer_type="TypePointer";
 %typeof enumerated_type="TypeEnumRange";
 %typeof array_type = "TypeArray";
-%typeof subrange_type = "TypeArrayRange";
+%typeof subrange_type = "TypeRange";
 %typeof range_type="Type";
 %typeof index_type="Type";
 %typeof type_declaration = "NodeId";
@@ -241,34 +243,32 @@ index_type =
 enumerated_type=
 	init_enumerated_type TOKEN_LPAR identifier_list.l TOKEN_RPAR
 	{:
+		String refValue = String.valueOf(refEnum);
+
 		TypeEnumRange enumRange = new TypeEnumRange();
 
 		Iterator<String> it = l.iterator();
 		int cpt = 0;
-
 		String tmp;
+
 		tmp = it.next();
 		enumRange.setFirst(
 			new TypeItemEnum(cpt, tmp)
 		);
-
+		typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, refValue));
 		cpt++;
-		String last = "";
 
 		while(it.hasNext()) {
 			tmp = it.next();
 			cpt++;
+			typeEnvironment.putVariable(tmp, new TypeItemEnum(cpt, refValue));
 		}
 
 		enumRange.setLast(
-			new TypeItemEnum(cpt, last)
+			new TypeItemEnum(cpt, tmp)
 		);
 
-		it = l.iterator();
-		while(it.hasNext()) {
-			typeEnvironment.putVariable(it.next(), enumRange);
-		}
-
+		refEnum++;
 		return enumRange;
 	:}
 	;
@@ -292,11 +292,27 @@ subrange_type=
 
 					return new Symbol(0);
 			} else {
-				System.out.println("GRAMMAR -> " + typeEnvironment.getVariableValue((String)i1.value));
-				System.out.println("GRAMMAR -> " + typeEnvironment.getVariableValue((String)i2.value));
+				
+				Type typeFirstIdentifier = typeEnvironment.getVariableValue((String)i1.value);
+				Type typeSecondIdentifier = typeEnvironment.getVariableValue((String)i2.value);
+				
+				System.out.println("GRAMMAR -> " + typeFirstIdentifier);
+				System.out.println("GRAMMAR -> " + typeSecondIdentifier);
+
+				if (typeFirstIdentifier instanceof TypeItemEnum) {
+					if (!(typeSecondIdentifier instanceof TypeItemEnum)) {
+						semanticError("Error in subrange type, type are not the same.", i2);
+						System.exit(0);
+					}
+					System.out.println("GRAMMAR -> subrange_type, instance of typeEnumRange !");
+
+					return new TypeEnumRange((TypeItemEnum)typeFirstIdentifier, (TypeItemEnum)typeSecondIdentifier);
+				}
+
+
 				return new TypeArrayRange(
-					typeEnvironment.getVariableValue((String)i1.value),
-					typeEnvironment.getVariableValue((String)i2.value)
+					typeFirstIdentifier,
+					typeSecondIdentifier
 			);
 			}
 		} else {
