@@ -4,6 +4,22 @@ ant clean;
 
 if [ -z $1 ]; then
     ant all && cat data/output;
+elif [ $1 = 1 ]; then
+    ant one && cat data/output;
+elif [ $1 = 2 ]; then
+    ant two && cat data/output;
+elif [ $1 = 3 ]; then
+    ant three && cat data/output;
+elif [ $1 = 4 ]; then
+    ant four && cat data/output;
+elif [ $1 = 5 ]; then
+    ant five && cat data/output;
+elif [ $1 = 6 ]; then
+    ant six && cat data/output;
+elif [ $1 = 7 ]; then
+    ant seven && cat data/output;
+elif [ $1 = 8 ]; then
+    ant eight && cat data/output;
 elif [ $1 = 9 ]; then
     ant nine && cat data/output;
 fi

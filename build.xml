@@ -69,6 +69,94 @@
 		</java>
 	</target>
 
+	<target name="one" depends="compile" description="Test prog1.">
+		<path id="beaverclasspath">
+			<fileset dir="lib" includes="beaver-rt.jar" />
+			<fileset dir="lib" includes="jflex-full-1.7.0.jar" />
+		</path>
+		<java classname="ubordeaux.deptinfo.compilation.project.main.Main" classpath="bin" classpathref="beaverclasspath" output="data/output">
+			<arg value="-checkType" />
+			<arg value="data/progr1.lea" />
+		</java>
+	</target>
+
+	<target name="two" depends="compile" description="Test prog2.">
+		<path id="beaverclasspath">
+			<fileset dir="lib" includes="beaver-rt.jar" />
+			<fileset dir="lib" includes="jflex-full-1.7.0.jar" />
+		</path>
+		<java classname="ubordeaux.deptinfo.compilation.project.main.Main" classpath="bin" classpathref="beaverclasspath" output="data/output">
+			<arg value="-checkType" />
+			<arg value="data/progr2.lea" />
+		</java>
+	</target>
+
+	<target name="three" depends="compile" description="Test prog3.">
+		<path id="beaverclasspath">
+			<fileset dir="lib" includes="beaver-rt.jar" />
+			<fileset dir="lib" includes="jflex-full-1.7.0.jar" />
+		</path>
+		<java classname="ubordeaux.deptinfo.compilation.project.main.Main" classpath="bin" classpathref="beaverclasspath" output="data/output">
+			<arg value="-checkType" />
+			<arg value="data/progr3.lea" />
+		</java>
+	</target>
+
+	<target name="four" depends="compile" description="Test prog4.">
+		<path id="beaverclasspath">
+			<fileset dir="lib" includes="beaver-rt.jar" />
+			<fileset dir="lib" includes="jflex-full-1.7.0.jar" />
+		</path>
+		<java classname="ubordeaux.deptinfo.compilation.project.main.Main" classpath="bin" classpathref="beaverclasspath" output="data/output">
+			<arg value="-checkType" />
+			<arg value="data/progr4.lea" />
+		</java>
+	</target>
+
+	<target name="five" depends="compile" description="Test prog5.">
+		<path id="beaverclasspath">
+			<fileset dir="lib" includes="beaver-rt.jar" />
+			<fileset dir="lib" includes="jflex-full-1.7.0.jar" />
+		</path>
+		<java classname="ubordeaux.deptinfo.compilation.project.main.Main" classpath="bin" classpathref="beaverclasspath" output="data/output">
+			<arg value="-checkType" />
+			<arg value="data/progr5.lea" />
+		</java>
+	</target>
+
+	<target name="six" depends="compile" description="Test prog6.">
+		<path id="beaverclasspath">
+			<fileset dir="lib" includes="beaver-rt.jar" />
+			<fileset dir="lib" includes="jflex-full-1.7.0.jar" />
+		</path>
+		<java classname="ubordeaux.deptinfo.compilation.project.main.Main" classpath="bin" classpathref="beaverclasspath" output="data/output">
+			<arg value="-checkType" />
+			<arg value="data/progr6.lea" />
+		</java>
+	</target>
+
+	<target name="seven" depends="compile" description="Test prog7.">
+		<path id="beaverclasspath">
+			<fileset dir="lib" includes="beaver-rt.jar" />
+			<fileset dir="lib" includes="jflex-full-1.7.0.jar" />
+		</path>
+		<java classname="ubordeaux.deptinfo.compilation.project.main.Main" classpath="bin" classpathref="beaverclasspath" output="data/output">
+			<arg value="-checkType" />
+			<arg value="data/progr7.lea" />
+		</java>
+	</target>
+
+	<target name="eight" depends="compile" description="Test prog8.">
+		<path id="beaverclasspath">
+			<fileset dir="lib" includes="beaver-rt.jar" />
+			<fileset dir="lib" includes="jflex-full-1.7.0.jar" />
+		</path>
+		<java classname="ubordeaux.deptinfo.compilation.project.main.Main" classpath="bin" classpathref="beaverclasspath" output="data/output">
+			<arg value="-checkType" />
+			<arg value="data/progr8.lea" />
+		</java>
+	</target>
+
 	<target name="nine" depends="compile" description="Test prog9.">
 		<path id="beaverclasspath">
 			<fileset dir="lib" includes="beaver-rt.jar" />
