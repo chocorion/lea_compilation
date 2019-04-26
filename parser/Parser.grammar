@@ -598,6 +598,10 @@ procedure_expression=
 		String n = (String) name.value;
 		TypeFunct type = (TypeFunct) procedureEnvironment.getVariableValue(n);
 		
+		if (type == null) {
+			semanticError("Error in function call, unknow procedure : " + n, name);
+			System.exit(-1);
+		}
 		return new NodeCallFct(n, type, e);
 	:}
 	;
