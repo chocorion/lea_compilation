@@ -3,7 +3,7 @@
 clear;
 ant clean;
 
-arg=("test" "one" "two" "three" "four" "five" "six" "seven" "height" "nine");
+arg=("test" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine");
 
 if [ -z $1 ]; then
     ant all && cat data/output;

@@ -607,7 +607,10 @@ simple_statement=
 
 assignment_statement=
 	variable_access.v TOKEN_AFF expression.e TOKEN_SEMIC {:
-		//Affectation d'une valeur dans une variable, penser a faire la verification du type
+		if (v.getType().getClass() != e.getType().getClass()) {
+			semanticError("Type error, must be " + v.getType().getClass() + " but found " + e.getType().getClass(), v);
+		}
+		
 		return new NodeAssign(v, e); //Je ne suis pas sure que ce soit ce type de node a utiliser
 	:}
 	;

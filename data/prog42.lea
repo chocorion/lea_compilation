@@ -10,6 +10,7 @@ a: string;
 
 begin
 a = 100;
+a = true;
 while (a >= 0) do
 	begin
 	println (a);
