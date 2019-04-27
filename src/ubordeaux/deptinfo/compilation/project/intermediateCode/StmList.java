@@ -10,7 +10,7 @@ public class StmList {
 		this.tail = tail;
 	}
 
-	public void Add(Stm stm) {
+	public void add(Stm stm) {
 		this.tail = new StmList(this.head, this.tail);
 		this.head = stm;
 	}

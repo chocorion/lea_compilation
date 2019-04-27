@@ -1,8 +1,9 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 import java.util.Iterator;
 
-public final class NodeList extends Node {
+public final class NodeList extends NodeStm {
 
 	public NodeList(Node stm) {
 		super(stm);
@@ -40,6 +41,24 @@ public final class NodeList extends Node {
 			node.add((Node) elt.clone());
 		}
 		return node;
+	}
+
+	@Override
+	public void generateIntermediateCode() {
+		Iterator<Node> it = this.iterator();
+		NodeStm tmp;
+
+		StmList stmList = new StmList(null, null);
+
+		while (it.hasNext()) {
+			tmp = (NodeStm)it.next();
+
+			tmp.generateIntermediateCode();
+			stmList.add(tmp.getStm());
+		}
+
+		//super.stm = stmList
+
 	}
 
 }
