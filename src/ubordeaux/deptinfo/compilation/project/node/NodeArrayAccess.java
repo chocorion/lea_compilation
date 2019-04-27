@@ -5,6 +5,7 @@ import ubordeaux.deptinfo.compilation.project.type.TypeItemEnum;
 import ubordeaux.deptinfo.compilation.project.type.Type;
 import ubordeaux.deptinfo.compilation.project.type.TypeArray;
 import ubordeaux.deptinfo.compilation.project.type.TypeComplex;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 
 public final class NodeArrayAccess extends NodeExp {
 
@@ -49,6 +50,16 @@ public final class NodeArrayAccess extends NodeExp {
 	@Override
 	public NodeArrayAccess clone() {
 		return new NodeArrayAccess((NodeExp) get(0).clone(), (Node) get(1).clone());
+	}
+
+	@Override
+	public void generateIntermediateCode() {
+		getLhs().generateIntermediateCode();
+		getRhs().generateIntermediateCode();
+
+		Mem mem = new Mem(this.getRhs().getExp());
+
+		super.exp = mem;
 	}
 
 }

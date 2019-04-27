@@ -24,4 +24,12 @@ public abstract class NodeStm extends Node {
 		return this.stm;
 	}
 
+	public NodeExp getLhs() {
+		return (NodeExp) this.get(0);
+	};
+
+	public NodeExp getRhs() {
+		return (NodeExp) this.get(1);
+	}
+
 }

@@ -92,19 +92,16 @@ public final class NodeCallFct extends NodeExp {
 	}
 
 	public void generateIntermediateCode() {
-		
-		if (checksType()){
-			Name func_name = new Name(new LabelLocation(this.name));
-			ExpList args = new ExpList(null, null);
-			for (int i = this.size(); i > 0; i--){
-				NodeExp fils = (NodeExp) this.get(i-1);
-				fils.generateIntermediateCode();			
-				args.Add(fils.getExp());
-			}
-			Call call = new Call(func_name, args);
-			super.exp = call;
+		Name func_name = new Name(new LabelLocation(this.name));
+		ExpList args = new ExpList(null, null);
+
+		for (int i = this.size(); i > 0; i--) {
+			NodeExp fils = (NodeExp) this.get(i-1);
+			fils.generateIntermediateCode();			
+			args.Add(fils.getExp());
 		}
-		
+		Call call = new Call(func_name, args);
+		super.exp = call;
 	}
 
 }

@@ -1,6 +1,7 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
 import ubordeaux.deptinfo.compilation.project.type.Type;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 
 public final class NodeId extends NodeExp {
 
@@ -33,6 +34,11 @@ public final class NodeId extends NodeExp {
 
 	public String getName() {
 		return this.name;
+	}
+
+	@Override
+	public void generateIntermediateCode() {
+		this.exp = new Temp(new TempValue());
 	}
 
 }

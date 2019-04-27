@@ -24,4 +24,12 @@ public abstract class NodeExp extends Node {
 		return this.exp;
 	}
 
+	public NodeExp getLhs() {
+		return (NodeExp) this.get(0);
+	};
+
+	public NodeExp getRhs() {
+		return (NodeExp) this.get(1);
+	}
+
 }
