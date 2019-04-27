@@ -19,3 +19,4 @@ bin/
 
 data/output
 src/ubordeaux/deptinfo/compilation/project/main/Terminals.java
+dot.*
