@@ -49,6 +49,7 @@ public class NodeOp extends NodeExp {
 		return null;
 		};
 	
+		@Override
 		public void generateIntermediateCode() {
 			if (checksType()){
 				int value = -1;
@@ -73,10 +74,10 @@ public class NodeOp extends NodeExp {
 						System.err.println("Error in generateIntermediateCode, unknow operator " + this.name);
 
 				}
-				getOp1().generateIntermediateCode();
-				getOp2().generateIntermediateCode();
+				getLhs().generateIntermediateCode();
+				getRhs().generateIntermediateCode();
 
-				Binop binop = new Binop(value, getOp1().getExp(), getOp2().getExp());
+				Binop binop = new Binop(value, getLhs().getExp(), getRhs().getExp());
 				super.exp = binop;
 			}
 		}
