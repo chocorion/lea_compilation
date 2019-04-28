@@ -10,4 +10,11 @@ public class Call extends Exp {
 		this.args = args;
 	}
 
+	@Override
+	public String toString() {
+		String ret = this.getClass().getSimpleName();
+		ret += "( " + this.func + ", " + this.args + ")";
+		return ret;
+	}
+
 }

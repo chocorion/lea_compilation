@@ -102,7 +102,7 @@ public final class NodeIf extends Node {
 
 		}
 
-		//Récupérer les label locationi des if et else
+		//Récupérer les label location des if et else
 		return new Cjump(value, left, right, new LabelLocation(), new LabelLocation());
 	}
 }
