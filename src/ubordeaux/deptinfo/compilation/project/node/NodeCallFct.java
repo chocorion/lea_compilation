@@ -91,7 +91,8 @@ public final class NodeCallFct extends NodeExp {
 		return "NodeCallFct " + name + "()";
 	}
 
-	public void generateIntermediateCode() {
+	@Override
+	public IntermediateCode generateIntermediateCode() {
 		Name func_name = new Name(new LabelLocation(this.name));
 		ExpList args = new ExpList(null, null);
 
@@ -101,7 +102,8 @@ public final class NodeCallFct extends NodeExp {
 			args.Add(fils.getExp());
 		}
 		Call call = new Call(func_name, args);
-		super.exp = call;
+		
+		return call;
 	}
 
 }

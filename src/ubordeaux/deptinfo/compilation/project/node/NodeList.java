@@ -2,6 +2,7 @@ package ubordeaux.deptinfo.compilation.project.node;
 
 import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 public final class NodeList extends NodeStm {
 
@@ -43,21 +44,20 @@ public final class NodeList extends NodeStm {
 		return node;
 	}
 
-	@Override
-	public void generateIntermediateCode() {
-		Iterator<Node> it = this.iterator();
-		NodeStm tmp;
 
-		StmList stmList = new StmList(null, null);
-
-		while (it.hasNext()) {
-			tmp = (NodeStm)it.next();
-
-			tmp.generateIntermediateCode();
-			stmList.add(tmp.getStm());
+	private Stm generateSeqRec(ArrayList<Node> l, int index) {
+		Stm current = ((NodeStm)l.get(index)).getStm();
+		
+		if (index == l.size() - 1) {
+			return current;
 		}
 
-		//super.stm = stmList
+		return new Seq(current, generateSeqRec(l, index + 1));
+	}
+
+	@Override
+	public IntermediateCode generateIntermediateCode() {
+		return this.generateSeqRec((ArrayList<Node>)this.elts, 0);
 
 	}
 

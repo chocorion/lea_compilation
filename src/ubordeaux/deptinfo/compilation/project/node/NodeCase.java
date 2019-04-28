@@ -1,5 +1,7 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
+import ubordeaux.deptinfo.compilation.project.intermediateCode.IntermediateCode;
+
 public final class NodeCase extends Node {
 
 	private String nameValue;
@@ -33,6 +35,12 @@ public final class NodeCase extends Node {
 
 	public boolean isDefaultValue() {
 		return defaultValue;
+	}
+
+	@Override
+	public IntermediateCode generateIntermediateCode() {
+
+		return null;
 	}
 
 }

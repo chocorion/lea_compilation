@@ -31,13 +31,11 @@ public final class NodeAssign extends NodeStm {
 	};
 
 	@Override
-	public void generateIntermediateCode() {
-		getLhs().generateIntermediateCode();
-		getRhs().generateIntermediateCode();
+	public IntermediateCode generateIntermediateCode() {
+		IntermediateCode left  = getLhs().generateIntermediateCode();
+		IntermediateCode right = getRhs().generateIntermediateCode();
 
-		Move move = new Move(new Mem(this.getLhs().getExp()), this.getRhs().getExp());
-		super.stm = move;
-
+		return new Move(new Mem((Exp)left), (Exp)right);
 	}
 
 }

@@ -53,13 +53,14 @@ public final class NodeArrayAccess extends NodeExp {
 	}
 
 	@Override
-	public void generateIntermediateCode() {
-		getLhs().generateIntermediateCode();
-		getRhs().generateIntermediateCode();
+	public IntermediateCode generateIntermediateCode() {
+		IntermediateCode left  = getLhs().generateIntermediateCode();
+		IntermediateCode right = getRhs().generateIntermediateCode();
 
-		Mem mem = new Mem(this.getRhs().getExp());
+		//Comment correctement calculer l'adresse ?
+		Mem mem = new Mem((Exp)left);
 
-		super.exp = mem;
+		return mem;
 	}
 
 }

@@ -39,35 +39,17 @@ public class NodeRel extends NodeExp {
 		return new NodeRel(name, (Node) getOp1().clone(), (Node) getOp2().clone());
 	};
 
+	public String getName() {
+		return this.name;
+	}
+
 	@Override
-	public void generateIntermediateCode() {
-		int value = -1;
-		switch (this.name) {
-		case "PLUS":
-			value = 0;
-			break;
+	public IntermediateCode generateIntermediateCode() {
+		//Normalement on ne passe jamais par ici, car nodeRel utilisé dans while,
+		//Et c'est le code de while qui génère le CJUMP avec les bons labels
 
-		case "MINUS":
-			value = 1;
-			break;
-
-		case "MUL":
-			value = 2;
-			break;
-
-		case "DIV":
-			value = 3;
-			break;
-
-		default:
-			System.err.println("Error in generateIntermediateCode, unknow operator " + this.name);
-
-		}
-		getLhs().generateIntermediateCode();
-		getRhs().generateIntermediateCode();
-
-		Binop binop = new Binop(value, getLhs().getExp(), getRhs().getExp());
-		super.exp = binop;
+		//Sinon c'est qu'il faut rajouter la possibilité de faire des comparaisons dans BinOp
+		return null;
 	}
 
 }

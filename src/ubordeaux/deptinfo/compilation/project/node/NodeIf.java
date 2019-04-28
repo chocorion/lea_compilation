@@ -1,5 +1,7 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
+
 public final class NodeIf extends Node {
 
 	public NodeIf(Node boolExp, Node stm) {
@@ -42,4 +44,65 @@ public final class NodeIf extends Node {
 		return this.get(1);
 	}
 
+	@Override
+	public IntermediateCode generateIntermediateCode() {
+		IntermediateCode exp = this.getExpNode().generateIntermediateCode();
+		IntermediateCode thenCode = this.getThenNode().generateIntermediateCode();
+		IntermediateCode elseCode = null;
+
+		if (this.getElseNode() != null) {
+			elseCode = this.getElseNode().generateIntermediateCode();
+		}
+
+		NodeRel rel = (NodeRel) this.getExpNode();
+		Exp left  = (Exp) rel.getLhs().generateIntermediateCode();
+		Exp right = (Exp) rel.getRhs().generateIntermediateCode(); 
+
+		int value = -1;
+		switch(rel.getName()) {
+			case "EQ":
+				value = 0;
+				break;
+
+			case "NE":
+				value = 1;
+				break;
+
+			case "LT":
+				value = 2;
+				break;
+
+			case "GT":
+				value = 3;
+				break;
+
+			case "LE":
+				value = 4;
+				break;
+
+			case "GE":
+				value = 5;
+				break;
+
+			case "ULT":
+				value = 6;
+				break;
+
+			case "ULE":
+				value = 7;
+				break;
+
+			case "UGT":
+				value = 8;
+				break;
+
+			case "UGE":
+				value = 9;
+				break;
+
+		}
+
+		//Récupérer les label locationi des if et else
+		return new Cjump(value, left, right, new LabelLocation(), new LabelLocation());
+	}
 }
