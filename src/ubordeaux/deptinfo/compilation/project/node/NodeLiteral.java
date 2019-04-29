@@ -33,8 +33,8 @@ public final class NodeLiteral extends NodeExp {
 	}
 
 	@Override
-	public IntermediateCode generateIntermediateCode() {
-		return new Const(value);
+	public void generateIntermediateCode() {
+		super.exp = new Const(value);
 	}
 
 }

@@ -56,8 +56,8 @@ public final class NodeList extends NodeStm {
 	}
 
 	@Override
-	public IntermediateCode generateIntermediateCode() {
-		return this.generateSeqRec((ArrayList<Node>)this.elts, 0);
+	public void generateIntermediateCode() {
+		//return this.generateSeqRec((ArrayList<Node>)this.elts, 0);
 
 	}
 

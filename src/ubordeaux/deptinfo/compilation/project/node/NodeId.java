@@ -37,8 +37,8 @@ public final class NodeId extends NodeExp {
 	}
 
 	@Override
-	public IntermediateCode generateIntermediateCode() {
-		return new Temp(new TempValue());
+	public void generateIntermediateCode() {
+		this.exp.add(new Temp(new TempValue));
 	}
 
 }

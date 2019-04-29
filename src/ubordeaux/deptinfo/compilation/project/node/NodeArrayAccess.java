@@ -53,14 +53,15 @@ public final class NodeArrayAccess extends NodeExp {
 	}
 
 	@Override
-	public IntermediateCode generateIntermediateCode() {
-		IntermediateCode left  = getLhs().generateIntermediateCode();
-		IntermediateCode right = getRhs().generateIntermediateCode();
+	public void generateIntermediateCode() {
+		this.getLhs().generateIntermediateCode();;
+		this.getRhs().generateIntermediateCode();;
+		
+		Exp left  = this.getLhs().getExp();
+		Exp right = this.getRhs().getExp();
 
-		//Comment correctement calculer l'adresse ?
-		Mem mem = new Mem((Exp)left);
-
-		return mem;
+		//Peut-être qu'il faut multiplier ça par la taille des éléments du tableaux
+		this.exp.add(new Mem(new Binop(0, left, right)));
 	}
 
 }

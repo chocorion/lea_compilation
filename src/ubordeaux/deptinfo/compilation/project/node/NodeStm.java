@@ -6,10 +6,11 @@ import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 public abstract class NodeStm extends Node {
 
 	protected Type type;
-	protected Stm stm;
+	protected StmList stm;
 
 	public NodeStm(Node... abstTrees) {
 		super(abstTrees);
+		this.stm = new StmList(null);
 	}
 
 	public Type getType() {
@@ -20,16 +21,10 @@ public abstract class NodeStm extends Node {
 		this.type = t;
 	}
 
-	public Stm getStm() {
+	public StmList getStm() {
 		return this.stm;
 	}
 
-	public NodeExp getLhs() {
-		return (NodeExp) this.get(0);
-	};
-
-	public NodeExp getRhs() {
-		return (NodeExp) this.get(1);
-	}
+	
 
 }

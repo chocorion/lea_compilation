@@ -6,10 +6,12 @@ import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 public abstract class NodeExp extends Node {
 
 	protected Type type;
-	protected Exp exp;
+	protected ExpList exp;
 
 	public NodeExp(Node... abstTrees) {
 		super(abstTrees);
+
+		this.exp = new ExpList(null);
 	}
 
 	public Type getType() {
@@ -20,16 +22,9 @@ public abstract class NodeExp extends Node {
 		this.type = t;
 	}
 
-	public Exp getExp() {
+	public ExpList getExp() {
 		return this.exp;
 	}
 
-	public NodeExp getLhs() {
-		return (NodeExp) this.get(0);
-	};
-
-	public NodeExp getRhs() {
-		return (NodeExp) this.get(1);
-	}
 
 }

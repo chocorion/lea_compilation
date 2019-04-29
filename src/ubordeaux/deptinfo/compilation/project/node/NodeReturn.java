@@ -19,12 +19,7 @@ public final class NodeReturn extends NodeExp {
 	}
 
 	@Override
-	public IntermediateCode generateIntermediateCode() {
-		Exp ret =  (Exp)this.getLhs().generateIntermediateCode();
-
-		//Je ne sais pas quoi mettre comme label,
-		//Car return on prend le sommet de la pile et on jump à cette adresse
-		return new Jump(ret, null);
+	public void generateIntermediateCode() {
+		
 	}
-
 }

@@ -45,7 +45,7 @@ public final class NodeIf extends Node {
 	}
 
 	@Override
-	public IntermediateCode generateIntermediateCode() {
+	public void generateIntermediateCode() {
 		IntermediateCode exp = this.getExpNode().generateIntermediateCode();
 		IntermediateCode thenCode = this.getThenNode().generateIntermediateCode();
 		IntermediateCode elseCode = null;
@@ -103,6 +103,6 @@ public final class NodeIf extends Node {
 		}
 
 		//Récupérer les label location des if et else
-		return new Cjump(value, left, right, new LabelLocation(), new LabelLocation());
+		//return new Cjump(value, left, right, new LabelLocation(), new LabelLocation());
 	}
 }

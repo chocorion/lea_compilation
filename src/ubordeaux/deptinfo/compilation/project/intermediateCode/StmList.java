@@ -1,6 +1,6 @@
 package ubordeaux.deptinfo.compilation.project.intermediateCode;
 
-public class StmList {
+public class StmList implements IntermediateCode{
 	private Stm head;
 	private StmList tail;
 
@@ -8,6 +8,10 @@ public class StmList {
 		super();
 		this.head = head;
 		this.tail = tail;
+	}
+
+	public StmList (Stm head) {
+		this(head, null);
 	}
 
 	public void add(Stm stm) {

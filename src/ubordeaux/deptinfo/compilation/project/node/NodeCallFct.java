@@ -92,7 +92,7 @@ public final class NodeCallFct extends NodeExp {
 	}
 
 	@Override
-	public IntermediateCode generateIntermediateCode() {
+	public void generateIntermediateCode() {
 		Name func_name = new Name(new LabelLocation(this.name));
 		ExpList args = new ExpList(null, null);
 
@@ -103,7 +103,7 @@ public final class NodeCallFct extends NodeExp {
 		}
 		Call call = new Call(func_name, args);
 		
-		return call;
+		super.exp.add(call);
 	}
 
 }

@@ -1,8 +1,9 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
 import ubordeaux.deptinfo.compilation.project.intermediateCode.IntermediateCode;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.LabelLocation;
 
-public final class NodeCase extends Node {
+public final class NodeCase extends NodeStm {
 
 	private String nameValue;
 	private boolean defaultValue;
@@ -38,9 +39,11 @@ public final class NodeCase extends Node {
 	}
 
 	@Override
-	public IntermediateCode generateIntermediateCode() {
+	public void generateIntermediateCode() {
+		Stm sonStm = this.getStm().generateIntermediateCode();
 
-		return null;
+		this.stm.add(new Seq(new LabelLocation(this.nameValue), sonStm));
+		
 	}
 
 }

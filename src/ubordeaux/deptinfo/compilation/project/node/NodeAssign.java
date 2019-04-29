@@ -28,14 +28,22 @@ public final class NodeAssign extends NodeStm {
 	@Override
 	public NodeAssign clone() {
 		return new NodeAssign((NodeExp) getLhs().clone(), (NodeExp) getRhs().clone());
-	};
+	}
+
+	public NodeExp getLhs() {
+		return (NodeExp) this.get(0);
+	}
+
+	public NodeExp getRhs() {
+		return (NodeExp) this.get(1);
+	}
 
 	@Override
 	public void generateIntermediateCode() {
 		getLhs().generateIntermediateCode();
 		getRhs().generateIntermediateCode();
 		Move move = new Move(new Mem(this.getLhs().getExp()), this.getRhs().getExp());
-		super.stm = move;
+		this.stm.add(move);
 
 	}
 
