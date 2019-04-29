@@ -2,7 +2,6 @@ package ubordeaux.deptinfo.compilation.project.node;
 
 import ubordeaux.deptinfo.compilation.project.type.TypeBoolean;
 import ubordeaux.deptinfo.compilation.project.type.TypeInt;
-import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 
 public class NodeRel extends NodeExp {
 
@@ -38,18 +37,5 @@ public class NodeRel extends NodeExp {
 	public NodeRel clone() {
 		return new NodeRel(name, (Node) getOp1().clone(), (Node) getOp2().clone());
 	};
-
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
-	public IntermediateCode generateIntermediateCode() {
-		//Normalement on ne passe jamais par ici, car nodeRel utilisé dans while,
-		//Et c'est le code de while qui génère le CJUMP avec les bons labels
-
-		//Sinon c'est qu'il faut rajouter la possibilité de faire des comparaisons dans BinOp
-		return null;
-	}
 
 }
