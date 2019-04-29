@@ -10,8 +10,8 @@ public abstract class NodeExp extends Node {
 
 	public NodeExp(Node... abstTrees) {
 		super(abstTrees);
-
 		this.exp = new ExpList(null);
+		
 	}
 
 	public Type getType() {

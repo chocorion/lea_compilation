@@ -42,8 +42,8 @@ public final class NodeAssign extends NodeStm {
 	public void generateIntermediateCode() {
 		getLhs().generateIntermediateCode();
 		getRhs().generateIntermediateCode();
-		Move move = new Move(new Mem(this.getLhs().getExp()), this.getRhs().getExp());
-		this.stm.add(move);
+		Move move = new Move(new Mem(this.getLhs().getExp().get(0)), this.getRhs().getExp().get(0));
+		this.getStm().Add(move);
 
 	}
 

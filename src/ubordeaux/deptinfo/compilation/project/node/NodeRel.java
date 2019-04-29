@@ -25,11 +25,15 @@ public class NodeRel extends NodeExp {
 		return true;
 	}
 
-	private NodeExp getOp1() {
+	public String getName() {
+		return this.name;
+	}
+
+	public NodeExp getOp1() {
 		return (NodeExp) this.get(0);
 	};
 
-	private NodeExp getOp2() {
+	public NodeExp getOp2() {
 		return (NodeExp) this.get(1);
 	}
 
@@ -37,5 +41,14 @@ public class NodeRel extends NodeExp {
 	public NodeRel clone() {
 		return new NodeRel(name, (Node) getOp1().clone(), (Node) getOp2().clone());
 	};
+
+	@Override
+	public void generateIntermediateCode() {
+		this.getOp1().generateIntermediateCode();
+		this.getOp2().generateIntermediateCode();
+
+		this.exp.add(this.getOp1().getExp());
+		this.exp.add(this.getOp2().getExp());
+	}
 
 }

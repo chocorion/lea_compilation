@@ -91,12 +91,4 @@ public abstract class Node extends ClonableSymbol implements NodeInterface {
 			System.err.println("ERROR: build dot");
 		}
 	}
-
-	@Override
-	public void generateIntermediateCode() {
-		// TODO Auto-generated method stub
-		System.err.println("TODO: " + this.getClass().getSimpleName() + ".generateIntermediateCode()");
-
-	}
-
 }

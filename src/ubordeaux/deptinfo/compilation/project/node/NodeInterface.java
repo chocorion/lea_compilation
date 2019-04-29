@@ -10,7 +10,7 @@ public interface NodeInterface {
 	boolean checksType();
 
 	// Cette méthode, non encore implémentée produit le code intermédiaire Exp ou Stm
-	IntermediateCode generateIntermediateCode();
+	void generateIntermediateCode();
 	
 	// Affiche sous forme parenthésée ce Node
 	String toString();

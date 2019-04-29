@@ -2,7 +2,7 @@ package ubordeaux.deptinfo.compilation.project.node;
 
 import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 
-public final class NodeIf extends Node {
+public final class NodeIf extends NodeStm {
 
 	public NodeIf(Node boolExp, Node stm) {
 		super(boolExp, stm);
@@ -46,63 +46,77 @@ public final class NodeIf extends Node {
 
 	@Override
 	public void generateIntermediateCode() {
-		IntermediateCode exp = this.getExpNode().generateIntermediateCode();
-		IntermediateCode thenCode = this.getThenNode().generateIntermediateCode();
-		IntermediateCode elseCode = null;
+		this.getExpNode().generateIntermediateCode();
+		this.getThenNode().generateIntermediateCode();
 
-		if (this.getElseNode() != null) {
-			elseCode = this.getElseNode().generateIntermediateCode();
+		Node elseNode = this.getElseNode();
+
+		if (elseNode != null) {
+			elseNode.generateIntermediateCode();
 		}
 
-		NodeRel rel = (NodeRel) this.getExpNode();
-		Exp left  = (Exp) rel.getLhs().generateIntermediateCode();
-		Exp right = (Exp) rel.getRhs().generateIntermediateCode(); 
+		Label then_L = new Label(new LabelLocation());
+		Label else_L = (elseNode == null)? null : new Label(new LabelLocation());
+		Label end_L = new Label(new LabelLocation());
 
 		int value = -1;
-		switch(rel.getName()) {
-			case "EQ":
+
+		NodeRel nodeRel = (NodeRel)getExpNode();
+		nodeRel.generateIntermediateCode();
+
+		switch(nodeRel.getName()) {
+			case "EQ" :  
 				value = 0;
 				break;
 
-			case "NE":
+			case "NE" :  
 				value = 1;
 				break;
 
-			case "LT":
+			case "LT" :  
 				value = 2;
 				break;
 
-			case "GT":
+			case "GT" :  
 				value = 3;
 				break;
 
-			case "LE":
+			case "LE" :  
 				value = 4;
 				break;
 
-			case "GE":
+			case "GE" :  
 				value = 5;
 				break;
-
-			case "ULT":
-				value = 6;
-				break;
-
-			case "ULE":
-				value = 7;
-				break;
-
-			case "UGT":
-				value = 8;
-				break;
-
-			case "UGE":
-				value = 9;
-				break;
-
 		}
 
-		//Récupérer les label location des if et else
-		//return new Cjump(value, left, right, new LabelLocation(), new LabelLocation());
+		
+		Cjump cjump = new Cjump(value, nodeRel.getOp1().getExp(), nodeRel.getOp2().getExp(), then_L, else_L);
+
+		Stm endStm;
+		if (elseNode == null) {
+			endStm = end_L;
+		} else {
+			endStm = new Seq(
+				new Seq(
+					else_L,
+					((NodeStm)getElseNode()).getStm()
+				),
+				end_L
+			);
+		}
+
+		this.stm.add(
+			new Seq(
+				cjump,
+				new Seq(
+					new Seq(
+						then_L,
+						((NodeStm)getThenNode()).getStm()
+					),
+					endStm
+				)
+			)
+		);
 	}
 }

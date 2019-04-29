@@ -54,14 +54,14 @@ public final class NodeArrayAccess extends NodeExp {
 
 	@Override
 	public void generateIntermediateCode() {
-		this.getLhs().generateIntermediateCode();;
-		this.getRhs().generateIntermediateCode();;
+		this.get(0).generateIntermediateCode();;
+		this.get(1).generateIntermediateCode();;
 		
-		Exp left  = this.getLhs().getExp();
-		Exp right = this.getRhs().getExp();
+		ExpList left  = ((NodeExp)this.get(0)).getExp();
+		ExpList right = ((NodeExp)this.get(1)).getExp();
 
 		//Peut-être qu'il faut multiplier ça par la taille des éléments du tableaux
-		this.exp.add(new Mem(new Binop(0, left, right)));
+		this.getExp().Add(new Mem(new Binop(0, left.get(0), right.get(0))));
 	}
 
 }

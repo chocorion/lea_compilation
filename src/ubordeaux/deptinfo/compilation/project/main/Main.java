@@ -35,7 +35,7 @@ public class Main {
                             System.err.println("*** Erreur de typage");
                         } else {
                             System.err.println("*** Typage correct");
-                            System.out.println(result.generateIntermediateCode());
+                            //System.out.println(result.generateIntermediateCode());
                         }
                     } 
                 } catch (beaver.Parser.Exception e) {
