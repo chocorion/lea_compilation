@@ -10,7 +10,7 @@ public class Label extends Stm {
 
 	@Override
 	public String toString() {
-		return "Label(" + this.label.toString() + ")";
+		return "Label(" + this.label + ")";
 	}
 
 }

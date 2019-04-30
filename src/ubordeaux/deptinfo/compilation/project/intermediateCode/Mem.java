@@ -10,6 +10,6 @@ public class Mem extends Exp {
 
 	@Override
 	public String toString() {
-		return "Mem(" + this.exp.toString() + ")";
+		return "Mem(" + this.exp + ")";
 	}
 }

@@ -74,10 +74,13 @@ public final class NodeWhile extends Node {
 				break;
 		}
 
+		nodeRel.getOp1().generateIntermediateCode();
+		nodeRel.getOp2().generateIntermediateCode();
+
 		Cjump cjump = new Cjump(
 			value,
-			(Exp) nodeRel.getOp1().generateIntermediateCode(),
-			(Exp) nodeRel.getOp2().generateIntermediateCode(),
+			nodeRel.getOp1().getExp(),
+			nodeRel.getOp2().getExp(),
 			beginLocation,
 			endLocation
 		);

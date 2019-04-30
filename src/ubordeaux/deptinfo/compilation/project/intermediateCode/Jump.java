@@ -13,4 +13,10 @@ public class Jump extends Stm {
 	public Jump(LabelLocation target) {
 		this(new Name(target), new LabelLocationList(target, null));
 	}
+
+	@Override
+	public String toString() {
+		return "Jump(" + this.exp + ", "+ this.targets +")";
+	}
+
 }

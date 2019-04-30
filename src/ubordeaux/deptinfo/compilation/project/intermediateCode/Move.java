@@ -11,7 +11,7 @@ public class Move extends Stm {
 
 	@Override
 	public String toString() {
-		return "Move(" + dst.toString() + ", " + src.toString() + ")";
+		return "Move(" + dst + ", " + src + ")";
 	}
 
 }

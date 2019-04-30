@@ -9,5 +9,4 @@ public interface IntermediateCode {
 	public void canonicalTransformation();
 
 	
-	
 }

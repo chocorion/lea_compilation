@@ -18,9 +18,9 @@ public class Binop extends Exp {
 	public String toString() {
 		String ret = this.getClass().getSimpleName();
 		
-		ret += '(' + binop;
-		ret += ", " + this.left;
-		ret += ", " + this.right;
+		ret += "(" + this.left;
+		ret += " " + this.binop;
+		ret += " " + this.right;
 		ret += ")";
 
 		return ret;

@@ -45,8 +45,11 @@ public class NodeRel extends NodeExp {
 
 	@Override
 	public IntermediateCode generateIntermediateCode() {
-		Exp left =  (Exp) this.getOp1().generateIntermediateCode();
-		Exp right = (Exp) this.getOp2().generateIntermediateCode();
+		this.getOp1().generateIntermediateCode();
+		this.getOp2().generateIntermediateCode();
+		
+		Exp left =  ((NodeExp) this.getOp1()).getExp();
+		Exp right = ((NodeExp) this.getOp2()).getExp();
 
 		//Null pour le moment, car on ne sait pas trop si on doit utiliser Binop avec MINUS
 		this.exp = null;
