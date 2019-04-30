@@ -57,6 +57,9 @@ public final class NodeList extends Node {
 
 	@Override
 	public IntermediateCode generateIntermediateCode() {
+		if (this.elts.size() == 0) {
+			return null;
+		}
 		return this.generateSeqRec((ArrayList<Node>)this.elts, 0);
 
 	}
