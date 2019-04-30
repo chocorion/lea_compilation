@@ -51,7 +51,7 @@ public class NodeOp extends NodeExp {
 		};
 	
 	@Override
-	public void generateIntermediateCode() {
+	public IntermediateCode generateIntermediateCode() {
 		int value = -1;
 		
 		switch(this.name) {

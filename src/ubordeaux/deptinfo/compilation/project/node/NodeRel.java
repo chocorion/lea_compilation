@@ -1,6 +1,6 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
-import ubordeaux.deptinfo.compilation.project.intermediateCode.IntermediateCode;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 import ubordeaux.deptinfo.compilation.project.type.TypeBoolean;
 import ubordeaux.deptinfo.compilation.project.type.TypeInt;
 

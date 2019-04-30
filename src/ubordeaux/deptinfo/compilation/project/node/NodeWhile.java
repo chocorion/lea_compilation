@@ -1,5 +1,7 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
+
 public final class NodeWhile extends Node {
 
 	public NodeWhile(Node boolExpr, Node stm) {
@@ -29,5 +31,10 @@ public final class NodeWhile extends Node {
 		return this.get(0);
 	}
 
+	@Override
+	public IntermediateCode generateIntermediateCode() {
+		// TODO
+		return null;
+	}
 
 }

@@ -45,23 +45,22 @@ public final class NodeIf extends Node {
 	}
 
 	@Override
-	public void generateIntermediateCode() {
+	public IntermediateCode generateIntermediateCode() {
 		Exp exp = (Exp) this.getExpNode().generateIntermediateCode();
 		Stm then_stm = (Stm) this.getThenNode().generateIntermediateCode();
 		Stm else_stm = null;
 
-		if (this.getElseNode != null) {
-			else_stm = (Stm) elseNode.generateIntermediateCode();
+		if (this.getElseNode() != null) {
+			else_stm = (Stm) this.getElseNode().generateIntermediateCode();
 		}
 
-		Label then_L = new Label(new LabelLocation());
-		Label else_L = (else_stm == null)? null : new Label(new LabelLocation());
-		Label end_L = new Label(new LabelLocation());
+		LabelLocation then_L = new LabelLocation();
+		LabelLocation else_L = (else_stm == null)? null : new LabelLocation();
+		LabelLocation end_L = new LabelLocation();
 
 		int value = -1;
 
 		NodeRel nodeRel = (NodeRel)getExpNode();
-		nodeRel.generateIntermediateCode();
 
 		switch(nodeRel.getName()) {
 			case "EQ" :  
@@ -90,18 +89,25 @@ public final class NodeIf extends Node {
 		}
 
 		
-		Cjump cjump = new Cjump(value, nodeRel.getOp1().getExp(), nodeRel.getOp2().getExp(), then_L, else_L);
+		Cjump cjump = new Cjump(
+			value,
+			(Exp) nodeRel.getOp1().generateIntermediateCode(),
+			(Exp) nodeRel.getOp2().generateIntermediateCode(),
+			then_L,
+			else_L
+		);
 
 		Stm endStm;
-		if (elseNode == null) {
-			endStm = end_L;
+		Label end = new Label(end_L);
+		if (this.getElseNode() == null) {
+			endStm = new Label(end_L);
 		} else {
 			endStm = new Seq(
 				new Seq(
-					else_L,
+					new Label(else_L),
 					else_stm
 				),
-				end_L
+				end
 			);
 		}
 
@@ -111,13 +117,13 @@ public final class NodeIf extends Node {
 					cjump,
 					new Seq(
 						new Seq(
-							then_L,
+							new Label(then_L),
 							then_stm
 						),
-							endStm
-					),
-					end_L
-				)
+						endStm
+					)
+				),
+				end
 			);
 	}
 }

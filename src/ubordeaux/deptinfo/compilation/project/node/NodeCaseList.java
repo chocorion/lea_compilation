@@ -36,7 +36,7 @@ public final class NodeCaseList extends Node {
 			return null;
 		}
 
-		return this.generateCodeRec(this.elts, 0);
+		return this.generateSeqRec((ArrayList<Node>)this.elts, 0);
 	}
 
 }
