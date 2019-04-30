@@ -1,5 +1,6 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
+import ubordeaux.deptinfo.compilation.project.intermediateCode.IntermediateCode;
 import ubordeaux.deptinfo.compilation.project.type.TypeBoolean;
 import ubordeaux.deptinfo.compilation.project.type.TypeInt;
 
@@ -43,12 +44,12 @@ public class NodeRel extends NodeExp {
 	};
 
 	@Override
-	public void generateIntermediateCode() {
-		this.getOp1().generateIntermediateCode();
-		this.getOp2().generateIntermediateCode();
+	public IntermediateCode generateIntermediateCode() {
+		Exp left =  (Exp) this.getOp1().generateIntermediateCode();
+		Exp right = (Exp) this.getOp2().generateIntermediateCode();
 
-		this.exp.add(this.getOp1().getExp());
-		this.exp.add(this.getOp2().getExp());
+		//Null pour le moment, car on ne sait pas trop si on doit utiliser Binop avec MINUS
+		return null;
 	}
 
 }

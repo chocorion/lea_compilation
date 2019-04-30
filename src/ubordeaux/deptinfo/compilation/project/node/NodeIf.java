@@ -46,17 +46,16 @@ public final class NodeIf extends NodeStm {
 
 	@Override
 	public void generateIntermediateCode() {
-		this.getExpNode().generateIntermediateCode();
-		this.getThenNode().generateIntermediateCode();
+		Exp exp = (Exp) this.getExpNode().generateIntermediateCode();
+		Stm then_stm = (Stm) this.getThenNode().generateIntermediateCode();
+		Stm else_stm = null;
 
-		Node elseNode = this.getElseNode();
-
-		if (elseNode != null) {
-			elseNode.generateIntermediateCode();
+		if (this.getElseNode != null) {
+			else_stm = (Stm) elseNode.generateIntermediateCode();
 		}
 
 		Label then_L = new Label(new LabelLocation());
-		Label else_L = (elseNode == null)? null : new Label(new LabelLocation());
+		Label else_L = (else_stm == null)? null : new Label(new LabelLocation());
 		Label end_L = new Label(new LabelLocation());
 
 		int value = -1;
@@ -100,21 +99,24 @@ public final class NodeIf extends NodeStm {
 			endStm = new Seq(
 				new Seq(
 					else_L,
-					((NodeStm)getElseNode()).getStm()
+					else_stm
 				),
 				end_L
 			);
 		}
 
-		this.stm.add(
+		return 
 			new Seq(
-				cjump,
 				new Seq(
+					cjump,
 					new Seq(
-						then_L,
-						((NodeStm)getThenNode()).getStm()
+						new Seq(
+							then_L,
+							then_stm
+						),
+							endStm
 					),
-					endStm
+					end_L
 				)
 			)
 		);

@@ -75,11 +75,11 @@ public class NodeOp extends NodeExp {
 				System.err.println("Error in generateIntermediateCode, unknow operator " + this.name);
 		}
 				
-		getOp1().generateIntermediateCode();
-		getOp2().generateIntermediateCode();
+		Exp left  = (Exp) getOp1().generateIntermediateCode();
+		Exp right = (Exp) getOp2().generateIntermediateCode();
 
 
-		super.exp.add(new Binop(value, getOp1().getExp(), getOp2().getExp()));
+		return new Binop(value, left, right);
 			
 	}
 }
