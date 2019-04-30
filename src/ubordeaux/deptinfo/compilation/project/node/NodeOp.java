@@ -16,7 +16,7 @@ public class NodeOp extends NodeExp {
 		NodeExp exprFct = (NodeExp) this.get(1);
 		type = exprFct.type;
 	}
-
+ 
 	public NodeOp(String name, NodeExp op) {
 		super(op);
 		this.name = name;

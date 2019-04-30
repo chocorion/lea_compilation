@@ -49,4 +49,32 @@ public class ExpList implements IntermediateCode {
 		}
 	}
 
+
+
+
+	private String displayRec(ExpList l) {
+		if (l == null) {
+			return "";
+		}
+
+		if (l.getHead() != null && l.getTail() != null) {
+			return head + ", " + this.displayRec(l.getTail());
+		} else if (l.getHead() != null) {
+			return head.toString();
+		}
+
+		return "";
+
+	}
+
+	private ExpList getTail() {
+		return this.tail;
+	}
+
+	@Override
+	public String toString() {
+		return "ExpList(" + this.displayRec(this) + ")";
+	}
+
+
 }
