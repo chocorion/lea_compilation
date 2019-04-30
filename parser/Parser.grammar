@@ -808,7 +808,7 @@ expression=
 	| expression.e1 TOKEN_TIMES expression.e2 {: return new NodeOp("MUL",e1,e2); :}
 	| expression.e1 TOKEN_DIV expression.e2 {: return new NodeOp("DIV",e1,e2); :}
 	| TOKEN_MINUS expression.e @UNARY_MINUS {:
-		return new NodeOp("MINUS", e);
+		return new NodeOp("MINUS", new NodeLiteral(new TypeInt(), new Integer(0)), e);
 	:}
 	| expression.e1 TOKEN_OR expression.e2 {:
 		return new NodeRel("OR", e1, e2);
