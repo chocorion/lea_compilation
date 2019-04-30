@@ -2,8 +2,8 @@ package ubordeaux.deptinfo.compilation.project.node;
 
 import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 
-public final class NodeIf extends NodeStm {
 
+public final class NodeIf extends Node {
 	public NodeIf(Node boolExp, Node stm) {
 		super(boolExp, stm);
 	}
@@ -118,7 +118,6 @@ public final class NodeIf extends NodeStm {
 					),
 					end_L
 				)
-			)
-		);
+			);
 	}
 }
