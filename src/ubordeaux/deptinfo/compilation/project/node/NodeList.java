@@ -46,7 +46,7 @@ public final class NodeList extends Node {
 
 
 	private Stm generateSeqRec(ArrayList<Node> l, int index) {
-		Stm current = ((NodeStm)l.get(index)).getStm();
+		Stm current = (Stm)(l.get(index).generateIntermediateCode());
 		
 		if (index == l.size() - 1) {
 			return current;
@@ -56,8 +56,8 @@ public final class NodeList extends Node {
 	}
 
 	@Override
-	public void generateIntermediateCode() {
-		//return this.generateSeqRec((ArrayList<Node>)this.elts, 0);
+	public IntermediateCode generateIntermediateCode() {
+		return this.generateSeqRec((ArrayList<Node>)this.elts, 0);
 
 	}
 

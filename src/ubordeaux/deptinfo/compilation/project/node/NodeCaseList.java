@@ -1,6 +1,7 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
-import ubordeaux.deptinfo.compilation.project.intermediateCode.IntermediateCode;
+import java.util.ArrayList;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 
 public final class NodeCaseList extends Node {
 
@@ -19,26 +20,23 @@ public final class NodeCaseList extends Node {
 		return new NodeCaseList();
 	}
 
-	private Stm generateCodeRec(int index, ArrayList<NodeStm> l, int size) {
-		if (index == size - 1) {
-			return (Stm) l.get(size - 1).generateIntermediateCode();
+	private Stm generateSeqRec(ArrayList<Node> l, int index) {
+		Stm current = (Stm) (l.get(index).generateIntermediateCode());
+
+		if (index == l.size() - 1) {
+			return current;
 		}
 
-		return new Seq(
-			(Stm)l.get(index).generateIntermediateCode(),
-			generateCodeRec(index - 1, l, size);
-		)
+		return new Seq(current, generateSeqRec(l, index + 1));
 	}
 
 	@Override
 	public IntermediateCode generateIntermediateCode() {
-		int size = this.elts.size();
-
-		if (size == 0) {
+		if (this.elts.size() == 0) {
 			return null;
 		}
-		
-		return generateCodeRec(0, (ArrayList<NodeStm>)this.elts, size);
+
+		return this.generateCodeRec(this.elts, 0);
 	}
 
 }
