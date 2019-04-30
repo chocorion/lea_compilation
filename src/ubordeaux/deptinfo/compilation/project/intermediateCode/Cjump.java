@@ -1,5 +1,11 @@
 package ubordeaux.deptinfo.compilation.project.intermediateCode;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cjump extends Stm {
 	private int relop;
 	private Exp left, right;
@@ -46,5 +52,23 @@ public class Cjump extends Stm {
 	@Override
 	public String toString() {
 		return "CJump(" + left + " " + relop + " " + right + ", " + iftrue + ", " + iffalse + ")";
+	}
+
+	protected void toDot(StringBuffer stringBuffer) {
+		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
+		
+		left.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + left.uniqId + ";\n");
+
+		right.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + right.uniqId + ";\n");
+		
+		iftrue.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + iftrue.uniqId + ";\n");
+		
+		iffalse.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + iffalse.uniqId + ";\n");
+
+		
 	}
 }

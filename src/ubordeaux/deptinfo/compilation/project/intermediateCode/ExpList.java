@@ -1,6 +1,12 @@
 package ubordeaux.deptinfo.compilation.project.intermediateCode;
 
-public class ExpList implements IntermediateCode {
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExpList extends IntermediateCode {
 	private Exp head;
 	private ExpList tail;
 
@@ -50,8 +56,6 @@ public class ExpList implements IntermediateCode {
 	}
 
 
-
-
 	private String displayRec(ExpList l) {
 		if (l == null) {
 			return "";
@@ -76,5 +80,22 @@ public class ExpList implements IntermediateCode {
 		return "ExpList(" + this.displayRec(this) + ")";
 	}
 
+	protected void toDot(StringBuffer stringBuffer) {
+		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
+		
+		if (head == null) {return;}
+		head.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + head.uniqId + ";\n");
+	
+		ExpList tailCpy = tail;
+		
+		while (tailCpy != null) {
+			if (tailCpy.getHead() != null) {
+				stringBuffer.append("node_" + this.uniqId + " -> node_" + tailCpy.getHead().uniqId + ";\n");
+			}
+
+			tailCpy = tailCpy.getTail();
+		}
+	}
 
 }

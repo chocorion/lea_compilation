@@ -1,5 +1,11 @@
 package ubordeaux.deptinfo.compilation.project.intermediateCode;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Call extends Exp {
 	private Exp func;
 	private ExpList args;
@@ -17,4 +23,14 @@ public class Call extends Exp {
 		return ret;
 	}
 
+	protected void toDot(StringBuffer stringBuffer) {
+		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
+
+		func.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + func.uniqId + ";\n");
+
+		args.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + args.uniqId + ";\n");
+		
+	}
 }

@@ -1,12 +1,18 @@
 package ubordeaux.deptinfo.compilation.project.intermediateCode;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 //import beaver.Symbol;
 
 /**
  * A Label represents an address in assembly language.
  */
 
-public class LabelLocation {
+public class LabelLocation extends IntermediateCode {
 	private String name;
 	private static int count;
 
@@ -36,4 +42,7 @@ public class LabelLocation {
 		return name;
 	}
 
+	protected void toDot(StringBuffer stringBuffer) {
+		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
+	}
 }

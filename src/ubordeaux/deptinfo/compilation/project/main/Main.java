@@ -2,6 +2,7 @@ package ubordeaux.deptinfo.compilation.project.main;
 
 import java.io.FileReader;
 
+import ubordeaux.deptinfo.compilation.project.intermediateCode.IntermediateCode;
 import ubordeaux.deptinfo.compilation.project.node.Node;
 
 public class Main {
@@ -35,7 +36,10 @@ public class Main {
                             System.err.println("*** Erreur de typage");
                         } else {
                             System.err.println("*** Typage correct");
-                            System.out.println(result.generateIntermediateCode());
+                            IntermediateCode resultIntermediateCode = result.generateIntermediateCode();
+                            System.out.println(resultIntermediateCode);
+
+                            resultIntermediateCode.toDot("intermediate.dot");
                         }
                     } 
                 } catch (beaver.Parser.Exception e) {

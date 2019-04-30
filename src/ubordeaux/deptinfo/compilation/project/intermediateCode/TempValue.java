@@ -1,6 +1,12 @@
 package ubordeaux.deptinfo.compilation.project.intermediateCode;
 
-public class TempValue {
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TempValue extends IntermediateCode {
 	private static int count;
 	private int num;
 
@@ -11,6 +17,10 @@ public class TempValue {
 
 	public String toString() {
 		return "t" + num;
+	}
+
+	protected void toDot(StringBuffer stringBuffer) {
+		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
 	}
 
 }

@@ -1,6 +1,12 @@
 package ubordeaux.deptinfo.compilation.project.intermediateCode;
 
-public class LabelLocationList {
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class LabelLocationList extends IntermediateCode {
 	private LabelLocation head;
 	private LabelLocationList tail;
 
@@ -36,5 +42,25 @@ public class LabelLocationList {
 	@Override
 	public String toString() {
 		return "LabelLocationList(" + this.displayRec(this) + ")";
+	}
+
+	protected void toDot(StringBuffer stringBuffer) {
+		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
+
+		if (head == null) {
+			return;
+		}
+		head.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + head.uniqId + ";\n");
+
+		LabelLocationList tailCpy = tail;
+
+		while (tailCpy != null) {
+			if (tailCpy.getHead() != null) {
+				stringBuffer.append("node_" + this.uniqId + " -> node_" + tailCpy.getHead().uniqId + ";\n");
+			}
+
+			tailCpy = tailCpy.getTail();
+		}
 	}
 }
