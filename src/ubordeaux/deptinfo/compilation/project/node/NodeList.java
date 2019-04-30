@@ -4,7 +4,7 @@ import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-public final class NodeList extends NodeStm {
+public final class NodeList extends Node {
 
 	public NodeList(Node stm) {
 		super(stm);

@@ -4,7 +4,7 @@ import ubordeaux.deptinfo.compilation.project.intermediateCode.Move;
 import ubordeaux.deptinfo.compilation.project.type.Type;
 import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 
-public final class NodeAssign extends NodeStm {
+public final class NodeAssign extends Node {
 
 	public NodeAssign(NodeExp lhs, NodeExp rhs) {
 		super(lhs, rhs);
@@ -39,11 +39,12 @@ public final class NodeAssign extends NodeStm {
 	}
 
 	@Override
-	public void generateIntermediateCode() {
-		getLhs().generateIntermediateCode();
-		getRhs().generateIntermediateCode();
-		Move move = new Move(new Mem(this.getLhs().getExp().get(0)), this.getRhs().getExp().get(0));
-		this.getStm().Add(move);
+	public IntermediateCode generateIntermediateCode() {
+		Exp left  = (Exp) getLhs().generateIntermediateCode();
+		Exp right = (Exp) getRhs().generateIntermediateCode();
+
+		return new Move(new Mem(left), right);
+		
 
 	}
 

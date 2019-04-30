@@ -92,18 +92,16 @@ public final class NodeCallFct extends NodeExp {
 	}
 
 	@Override
-	public void generateIntermediateCode() {
+	public IntermediateCode generateIntermediateCode() {
 		Name func_name = new Name(new LabelLocation(this.name));
 		ExpList args = new ExpList(null, null);
 
 		for (int i = this.size(); i > 0; i--) {
-			NodeExp fils = (NodeExp) this.get(i-1);
-			fils.generateIntermediateCode();			
-			args.Add(fils.getExp());
+			NodeExp fils = (NodeExp) this.get(i-1);				
+			args.Add((Exp)fils.generateIntermediateCode(););
 		}
-		Call call = new Call(func_name, args);
 		
-		super.exp.add(call);
+		return new Call(func_name, args);
 	}
 
 }
