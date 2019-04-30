@@ -8,4 +8,9 @@ public class Label extends Stm {
 		this.label = label;
 	}
 
+	@Override
+	public String toString() {
+		return "Label(" + this.label.toString() + ")";
+	}
+
 }

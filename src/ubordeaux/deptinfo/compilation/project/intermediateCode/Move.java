@@ -9,4 +9,9 @@ public class Move extends Stm {
 		this.src = src;
 	}
 
+	@Override
+	public String toString() {
+		return "Move(" + dst.toString() + ", " + src.toString() + ")";
+	}
+
 }

@@ -33,8 +33,73 @@ public final class NodeWhile extends Node {
 
 	@Override
 	public IntermediateCode generateIntermediateCode() {
-		// TODO
-		return null;
+		
+
+		LabelLocation endLocation = new LabelLocation();
+		LabelLocation beginLocation = new LabelLocation();
+		LabelLocation whileTestLocation = new LabelLocation();
+
+		Label end = new Label(endLocation);
+		Label begin = new Label(beginLocation);
+		Label whileTest = new Label(whileTestLocation);
+
+		NodeRel nodeRel = (NodeRel) this.getExp();
+		Stm whileStm = (Stm) this.getStm().generateIntermediateCode();
+
+		int value = -1;
+
+		switch(nodeRel.getName()) {
+			case "EQ" :  
+				value = 0;
+				break;
+
+			case "NE" :  
+				value = 1;
+				break;
+
+			case "LT" :  
+				value = 2;
+				break;
+
+			case "GT" :  
+				value = 3;
+				break;
+
+			case "LE" :  
+				value = 4;
+				break;
+
+			case "GE" :  
+				value = 5;
+				break;
+		}
+
+		Cjump cjump = new Cjump(
+			value,
+			(Exp) nodeRel.getOp1().generateIntermediateCode(),
+			(Exp) nodeRel.getOp2().generateIntermediateCode(),
+			beginLocation,
+			endLocation
+		);
+
+		Jump jump = new Jump(whileTestLocation);
+		
+		return new Seq(
+			new Seq(
+				new Seq(
+					whileTest,
+					cjump
+				),
+				new Seq(
+					begin,
+					new Seq(
+						whileStm,
+						jump
+					)
+				)
+			),
+			end
+		);
 	}
 
 }
