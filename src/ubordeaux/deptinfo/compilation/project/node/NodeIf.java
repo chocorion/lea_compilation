@@ -88,11 +88,12 @@ public final class NodeIf extends Node {
 				break;
 		}
 
-		
+		nodeRel.getOp1().generateIntermediateCode();
+		nodeRel.getOp2().generateIntermediateCode();
 		Cjump cjump = new Cjump(
 			value,
-			(Exp) nodeRel.getOp1().generateIntermediateCode(),
-			(Exp) nodeRel.getOp2().generateIntermediateCode(),
+			((NodeExp) nodeRel.getOp1()).getExp(),
+			((NodeExp) nodeRel.getOp2()).getExp(),
 			then_L,
 			else_L
 		);
