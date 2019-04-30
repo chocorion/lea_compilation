@@ -79,7 +79,7 @@ public class NodeOp extends NodeExp {
 		Exp right = (Exp) getOp2().generateIntermediateCode();
 
 
-		return new Binop(value, left, right);
-			
+		this.exp =  new Binop(value, left, right);
+		return this.exp;
 	}
 }

@@ -34,7 +34,8 @@ public final class NodePtrAccess extends NodeExp {
 	@Override
 	public IntermediateCode generateIntermediateCode() {
 		// TODO
-		return null;
+		this.exp = null;
+		return this.exp;
 	}
 
 }

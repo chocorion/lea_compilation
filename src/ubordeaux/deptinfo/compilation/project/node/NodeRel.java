@@ -49,7 +49,8 @@ public class NodeRel extends NodeExp {
 		Exp right = (Exp) this.getOp2().generateIntermediateCode();
 
 		//Null pour le moment, car on ne sait pas trop si on doit utiliser Binop avec MINUS
-		return null;
+		this.exp = null;
+		return this.exp;
 	}
 
 }

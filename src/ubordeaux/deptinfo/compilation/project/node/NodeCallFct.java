@@ -101,7 +101,8 @@ public final class NodeCallFct extends NodeExp {
 			args.Add((Exp)fils.generateIntermediateCode());
 		}
 		
-		return new Call(func_name, args);
+		this.exp = new Call(func_name, args);
+		return this.exp;
 	}
 
 }

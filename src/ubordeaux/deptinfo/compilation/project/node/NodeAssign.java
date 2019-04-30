@@ -40,8 +40,10 @@ public final class NodeAssign extends Node {
 
 	@Override
 	public IntermediateCode generateIntermediateCode() {
-		Exp left  = (Exp) getLhs().generateIntermediateCode();
-		Exp right = (Exp) getRhs().generateIntermediateCode();
+		getLhs().generateIntermediateCode();
+		getRhs().generateIntermediateCode();
+		Exp right = getRhs().getExp();
+		Exp left = getLhs().getExp();
 
 		return new Move(new Mem(left), right);
 		
