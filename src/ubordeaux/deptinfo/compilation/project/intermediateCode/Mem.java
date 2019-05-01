@@ -22,7 +22,9 @@ public class Mem extends Exp {
 	protected void toDot(StringBuffer stringBuffer) {
 		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
 
-		exp.toDot(stringBuffer);
-		stringBuffer.append("node_" + this.uniqId + " -> node_" + exp.uniqId + ";\n");
+		if (exp != null) {
+			exp.toDot(stringBuffer);
+			stringBuffer.append("node_" + this.uniqId + " -> node_" + exp.uniqId + ";\n");
+		}
 	}
 }

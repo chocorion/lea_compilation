@@ -25,10 +25,14 @@ public class Seq extends Stm {
 	protected void toDot(StringBuffer stringBuffer) {
 		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
 
-		left.toDot(stringBuffer);
-		stringBuffer.append("node_" + this.uniqId + " -> node_" + left.uniqId + ";\n");
+		if (left != null) {
+			left.toDot(stringBuffer);
+			stringBuffer.append("node_" + this.uniqId + " -> node_" + left.uniqId + ";\n");
+		}
 
-		right.toDot(stringBuffer);
-		stringBuffer.append("node_" + this.uniqId + " -> node_" + right.uniqId + ";\n");
+		if (right != null) {
+			right.toDot(stringBuffer);
+			stringBuffer.append("node_" + this.uniqId + " -> node_" + right.uniqId + ";\n");
+		}
 	}
 }

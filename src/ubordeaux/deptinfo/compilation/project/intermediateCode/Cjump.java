@@ -66,8 +66,10 @@ public class Cjump extends Stm {
 		iftrue.toDot(stringBuffer);
 		stringBuffer.append("node_" + this.uniqId + " -> node_" + iftrue.uniqId + ";\n");
 		
-		iffalse.toDot(stringBuffer);
-		stringBuffer.append("node_" + this.uniqId + " -> node_" + iffalse.uniqId + ";\n");
+		if (iffalse != null) {
+			iffalse.toDot(stringBuffer);
+			stringBuffer.append("node_" + this.uniqId + " -> node_" + iffalse.uniqId + ";\n");
+		}
 
 		
 	}

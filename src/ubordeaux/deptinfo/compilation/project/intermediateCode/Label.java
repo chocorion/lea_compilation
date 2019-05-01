@@ -22,7 +22,9 @@ public class Label extends Stm {
 	protected void toDot(StringBuffer stringBuffer) {
 		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
 
-		label.toDot(stringBuffer);
-		stringBuffer.append("node_" + this.uniqId + " -> node_" + label.uniqId + ";\n");
+		if (label != null) {
+			label.toDot(stringBuffer);
+			stringBuffer.append("node_" + this.uniqId + " -> node_" + label.uniqId + ";\n");
+		}
 	}
 }
