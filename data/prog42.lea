@@ -1,19 +1,7 @@
-type
-DaysOfWeek = (Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday);
-range = Monday .. Wednesday;
-
-table = array [range] of integer;
-
-var
-a: integer;
-a: string;
-
 begin
-a = 100;
-a = true;
-while (a >= 0) do
-	begin
-	println (a);
-	a = a - 1;
+	if (true) then begin
+		print("true")
+	else
+		print("false")
 	end
 end
