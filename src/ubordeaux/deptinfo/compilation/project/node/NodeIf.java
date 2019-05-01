@@ -101,14 +101,11 @@ public final class NodeIf extends Node {
 		Stm endStm;
 		Label end = new Label(end_L);
 		if (this.getElseNode() == null) {
-			endStm = new Label(end_L);
+			endStm = end;
 		} else {
 			endStm = new Seq(
-				new Seq(
-					new Label(else_L),
-					else_stm
-				),
-				end
+				new Label(else_L),
+				else_stm
 			);
 		}
 
@@ -118,8 +115,11 @@ public final class NodeIf extends Node {
 					cjump,
 					new Seq(
 						new Seq(
-							new Label(then_L),
-							then_stm
+							new Seq(
+								new Label(then_L),
+								then_stm
+							),
+							new Jump(end_L)
 						),
 						endStm
 					)

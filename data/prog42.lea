@@ -1,7 +1,6 @@
 begin
-	if (true) then begin
-		print("true")
+	if (0 < 1) then
+		print("true");
 	else
-		print("false")
-	end
+		print("false");
 end
