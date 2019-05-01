@@ -2,8 +2,8 @@ package ubordeaux.deptinfo.compilation.project.node;
 
 import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
 
-public final class NodeIf extends NodeStm {
 
+public final class NodeIf extends Node {
 	public NodeIf(Node boolExp, Node stm) {
 		super(boolExp, stm);
 	}
@@ -45,24 +45,22 @@ public final class NodeIf extends NodeStm {
 	}
 
 	@Override
-	public void generateIntermediateCode() {
-		this.getExpNode().generateIntermediateCode();
-		this.getThenNode().generateIntermediateCode();
+	public IntermediateCode generateIntermediateCode() {
+		Exp exp = (Exp) this.getExpNode().generateIntermediateCode();
+		Stm then_stm = (Stm) this.getThenNode().generateIntermediateCode();
+		Stm else_stm = null;
 
-		Node elseNode = this.getElseNode();
-
-		if (elseNode != null) {
-			elseNode.generateIntermediateCode();
+		if (this.getElseNode() != null) {
+			else_stm = (Stm) this.getElseNode().generateIntermediateCode();
 		}
 
-		Label then_L = new Label(new LabelLocation());
-		Label else_L = (elseNode == null)? null : new Label(new LabelLocation());
-		Label end_L = new Label(new LabelLocation());
+		LabelLocation then_L = new LabelLocation();
+		LabelLocation else_L = (else_stm == null)? null : new LabelLocation();
+		LabelLocation end_L = new LabelLocation();
 
 		int value = -1;
 
 		NodeRel nodeRel = (NodeRel)getExpNode();
-		nodeRel.generateIntermediateCode();
 
 		switch(nodeRel.getName()) {
 			case "EQ" :  
@@ -90,33 +88,43 @@ public final class NodeIf extends NodeStm {
 				break;
 		}
 
-		
-		Cjump cjump = new Cjump(value, nodeRel.getOp1().getExp(), nodeRel.getOp2().getExp(), then_L, else_L);
+		nodeRel.getOp1().generateIntermediateCode();
+		nodeRel.getOp2().generateIntermediateCode();
+		Cjump cjump = new Cjump(
+			value,
+			((NodeExp) nodeRel.getOp1()).getExp(),
+			((NodeExp) nodeRel.getOp2()).getExp(),
+			then_L,
+			else_L
+		);
 
 		Stm endStm;
-		if (elseNode == null) {
-			endStm = end_L;
+		Label end = new Label(end_L);
+		if (this.getElseNode() == null) {
+			endStm = new Label(end_L);
 		} else {
 			endStm = new Seq(
 				new Seq(
-					else_L,
-					((NodeStm)getElseNode()).getStm()
+					new Label(else_L),
+					else_stm
 				),
-				end_L
+				end
 			);
 		}
 
-		this.stm.add(
+		return 
 			new Seq(
-				cjump,
 				new Seq(
+					cjump,
 					new Seq(
-						then_L,
-						((NodeStm)getThenNode()).getStm()
-					),
-					endStm
-				)
-			)
-		);
+						new Seq(
+							new Label(then_L),
+							then_stm
+						),
+						endStm
+					)
+				),
+				end
+			);
 	}
 }

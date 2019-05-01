@@ -1,6 +1,9 @@
 package ubordeaux.deptinfo.compilation.project.node;
 
-public final class NodeCaseList extends NodeStm {
+import java.util.ArrayList;
+import ubordeaux.deptinfo.compilation.project.intermediateCode.*;
+
+public final class NodeCaseList extends Node {
 
 	public NodeCaseList() {
 		super();
@@ -17,13 +20,23 @@ public final class NodeCaseList extends NodeStm {
 		return new NodeCaseList();
 	}
 
-	@Override
-	public void generateIntermediateCode() {
-		for (NodeStm n : (ArrayList<NodeStm>)this.elts) {
-			n.generateIntermediateCode();
+	private Stm generateSeqRec(ArrayList<Node> l, int index) {
+		Stm current = (Stm) (l.get(index).generateIntermediateCode());
 
-			this.stm.add(n.getStm());
+		if (index == l.size() - 1) {
+			return current;
 		}
+
+		return new Seq(current, generateSeqRec(l, index + 1));
+	}
+
+	@Override
+	public IntermediateCode generateIntermediateCode() {
+		if (this.elts.size() == 0) {
+			return null;
+		}
+
+		return this.generateSeqRec((ArrayList<Node>)this.elts, 0);
 	}
 
 }

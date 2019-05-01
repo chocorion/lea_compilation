@@ -16,7 +16,7 @@ public class NodeOp extends NodeExp {
 		NodeExp exprFct = (NodeExp) this.get(1);
 		type = exprFct.type;
 	}
-
+ 
 	public NodeOp(String name, NodeExp op) {
 		super(op);
 		this.name = name;
@@ -51,7 +51,7 @@ public class NodeOp extends NodeExp {
 		};
 	
 	@Override
-	public void generateIntermediateCode() {
+	public IntermediateCode generateIntermediateCode() {
 		int value = -1;
 		
 		switch(this.name) {
@@ -74,12 +74,16 @@ public class NodeOp extends NodeExp {
 			default:
 				System.err.println("Error in generateIntermediateCode, unknow operator " + this.name);
 		}
-				
-		getOp1().generateIntermediateCode();
-		getOp2().generateIntermediateCode();
+		
+
+		this.getOp1().generateIntermediateCode();
+		this.getOp2().generateIntermediateCode();
+
+		Exp left  = ((NodeExp) this.getOp1()).getExp();
+		Exp right = ((NodeExp) this.getOp2()).getExp();
 
 
-		super.exp.add(new Binop(value, getOp1().getExp(), getOp2().getExp()));
-			
+		this.exp =  new Binop(value, left, right);
+		return this.exp;
 	}
 }

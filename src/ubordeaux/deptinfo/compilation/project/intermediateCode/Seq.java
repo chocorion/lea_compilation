@@ -1,5 +1,11 @@
 package ubordeaux.deptinfo.compilation.project.intermediateCode;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Seq extends Stm {
 	private Stm left, right;
 
@@ -14,5 +20,15 @@ public class Seq extends Stm {
 		String ret = this.getClass().getSimpleName();
 		ret += "(" + this.left + ", " + this.right + ")";
 		return ret;
+	}
+
+	protected void toDot(StringBuffer stringBuffer) {
+		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
+
+		left.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + left.uniqId + ";\n");
+
+		right.toDot(stringBuffer);
+		stringBuffer.append("node_" + this.uniqId + " -> node_" + right.uniqId + ";\n");
 	}
 }

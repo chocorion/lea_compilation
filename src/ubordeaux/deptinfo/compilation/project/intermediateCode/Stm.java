@@ -1,6 +1,12 @@
 package ubordeaux.deptinfo.compilation.project.intermediateCode;
 
-public abstract class Stm implements IntermediateCode {
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Stm extends IntermediateCode {
 	public Stm() {
 		super();
 	}

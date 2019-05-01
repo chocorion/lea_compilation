@@ -19,7 +19,10 @@ public final class NodeReturn extends NodeExp {
 	}
 
 	@Override
-	public void generateIntermediateCode() {
-		
+	public IntermediateCode generateIntermediateCode() {
+
+		//Pour le moment car on ne sait pas si on doit utiliser un jump ici
+		this.exp = null;
+		return this.exp;
 	}
 }

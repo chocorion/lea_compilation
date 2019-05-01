@@ -13,7 +13,14 @@ else
     if [ -n $2 ]; then
         if [ "$2" = "dot" ]; then
             dot -Tpng dot.dot -o dot.png;
-            eog dot.png;
+            dot -Tpng intermediate.dot -o intermediate.png;
+            eog dot.png&
+            eog intermediate.png&
+
+            read -p 'Waiting input for closing...' yolo
+
+            rm *.dot;
+            rm *.png;
         fi
     fi
 fi
