@@ -1,0 +1,4 @@
+Blanchet Yann (Parser, Grammar, Rapport)
+Boitelle Adrien (Parser, Grammar, Rapport)
+Navarro Robin (Stack, Grammar, IntermediateCode, Error Management, toDot on IntermediateCode, Rapport)
+Vergé Romain (Stack, Grammar, IntermediateCode, Error Management, toDot on IntermediateCode, Rapport)
