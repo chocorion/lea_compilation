@@ -22,6 +22,14 @@ public class Seq extends Stm {
 		return ret;
 	}
 
+	public Stm getLeft() {
+		return this.left;
+	}
+
+	public Stm getRight() {
+		return this.right;
+	}
+
 	protected void toDot(StringBuffer stringBuffer) {
 		stringBuffer.append("node_" + this.uniqId + " [shape=\"ellipse\", label=\"" + toDotNodeName() + "\"];\n");
 

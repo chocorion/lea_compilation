@@ -63,4 +63,9 @@ public class LabelLocationList extends IntermediateCode {
 			tailCpy = tailCpy.getTail();
 		}
 	}
+
+	public void Add(LabelLocation elt) {
+		this.tail = new LabelLocationList(this.head, this.tail);
+		this.head = elt;
+	}
 }

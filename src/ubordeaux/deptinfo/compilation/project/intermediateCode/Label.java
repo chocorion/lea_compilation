@@ -27,4 +27,8 @@ public class Label extends Stm {
 			stringBuffer.append("node_" + this.uniqId + " -> node_" + label.uniqId + ";\n");
 		}
 	}
+
+	public LabelLocation getLabelLocation() {
+		return this.label;
+	}
 }

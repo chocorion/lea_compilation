@@ -31,9 +31,37 @@ public final class NodeSwitch extends Node {
 		return this.get(0);
 	}
 
+	private Seq generateRec(Seq seq, LabelLocation endLocation, LabelLocationList labelList) {
+		if (seq.getRight() instanceof Seq) {
+
+			labelList.Add(((Label)((Seq)(seq.getLeft())).getLeft()).getLabelLocation());
+			return new Seq(
+				new Seq(
+					seq.getLeft(),
+					new Jump(endLocation)
+				),
+				this.generateRec((Seq)seq.getRight(), endLocation, labelList)
+			);
+		}
+
+		return new Seq(
+			seq,
+			new Label(endLocation)
+		);
+	}
+
 	@Override
 	public IntermediateCode generateIntermediateCode() {
-		//TODO
-		return null;
+		this.getExp().generateIntermediateCode();
+		Exp exp = ((NodeExp) this.getExp()).getExp();
+		Seq caseList = (Seq) this.getStm().generateIntermediateCode();
+
+		LabelLocation endLocation = new LabelLocation();
+		LabelLocationList labelList = new LabelLocationList(null, null);
+
+		return new Seq(
+			new Jump(exp, labelList),
+			this.generateRec(caseList, endLocation, labelList)
+		);
 	}
 }
